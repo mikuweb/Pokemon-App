@@ -1,16 +1,27 @@
-import React from "react";
-import { BiMenu } from "react-icons/bi";
-// 15:05
-const Navbar = () => {
+import React, { useState } from "react";
+import { BiMenu, BiX } from "react-icons/bi";
+
+const Navbar: React.FC = () => {
+  const [openMenu, setOpenMenu] = useState(false);
+
+  const toggleMenu = () => {
+    setOpenMenu((preClick) => !preClick);
+    console.log(openMenu);
+  };
+
+  const menuClassName = openMenu ? "top-[44px]" : "top-[-100%]";
+
   return (
     <nav className="bg-blue-900 h-11 flex justify-between items-center px-6">
       {/* LOGO */}
       <div className="">
-        <span className="text-yellow-400 font-extrabold">Pokémon </span>
-        <span className="text-white font-extrabold">App</span>
+        <span className="text-yellow-400 text-2xl font-extrabold">Pokémon </span>
+        <span className="text-white text-2xl font-extrabold">App</span>
       </div>
       {/* LINK ITEMS */}
-      <div className="md:static absolute bg-blue-900 bg-opacity-90 md:min-h-fit min-h-[60vh] left-0 top-[44px] w-full md:w-auto flex items-center px-5">
+      <div
+        className={`${menuClassName} duration-500 md:static absolute bg-blue-900 bg-opacity-90 md:min-h-fit min-h-[60vh] left-0 w-full md:w-auto flex items-center px-5`}
+      >
         <ul className="flex flex-col md:flex-row md:items-center justify-end gap-8 md:gap-4">
           <li>
             <a
@@ -31,8 +42,12 @@ const Navbar = () => {
         </ul>
       </div>
       {/* MENU ICON */}
-      <div className="md:hidden">
-        <BiMenu color="white" size={28} />
+      <div onClick={toggleMenu} className="md:hidden cursor-pointer">
+        {openMenu ? (
+          <BiX color="white" size={28} />
+        ) : (
+          <BiMenu color="white" size={28} />
+        )}
       </div>
     </nav>
   );
