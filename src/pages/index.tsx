@@ -18,9 +18,9 @@ interface GuessedState {
 }
 
 const Home = () => {
-  const [name, setName] = useState<string>("");
-  const [img, setImg] = useState<string>("");
-  const [states, setStates] = useState<GuessedState[] | undefined>([]);
+  const [name, setName] = useState("");
+  const [img, setImg] = useState("");
+  const [states, setStates] = useState<GuessedState[]>([]);
 
   // INITIAL STATE
   const fetchPokemon = async () => {
@@ -45,7 +45,7 @@ const Home = () => {
     fetchPokemon();
   }, []);
 
-  const deriveInitialState = (name: string): GuessedState[] => {
+  const deriveInitialState = (name: string) => {
     let arr = name.split(""); // turns "pikachu" into ['p', 'i', 'k', 'a', 'c', 'h', 'u']
     const initialGameState = arr.map((letter) => {
       return {
@@ -55,13 +55,13 @@ const Home = () => {
     });
     return initialGameState;
   };
-
   // WHEN A KEY IS PRESSED
   useEffect(() => {
-    const handleKeydown = (e) => {
+    const handleKeydown = (e: KeyboardEvent) => {
       console.log(e.key);
 
       const positions: number[] = checkKeyInName(e.key, name); // [2,4] Index of the pressed Key in the name
+      displayCorrectKeys(positions, e.key); // (states.guessed → true)
       console.log(positions);
     };
 
@@ -71,10 +71,11 @@ const Home = () => {
     };
   }, [name]);
 
-  const checkKeyInName = (pressedKey, name) => {
+  // Index of the pressed Key in the name (ex)[2, 4]
+  const checkKeyInName = (pressedKey: string, name: string) => {
     const positionsArr = [];
     let position: number = name.indexOf(pressedKey); // Check index of the pressed key in the name (Not: -1)
-    console.log(pressedKey, name);
+    // console.log(pressedKey, name);
     while (position !== -1) {
       positionsArr.push(position);
       position = name.indexOf(pressedKey, position + 1);
@@ -82,6 +83,19 @@ const Home = () => {
 
     return positionsArr;
   };
+
+  // Display only correctly guessed Keys (states.guessed → true)
+  const displayCorrectKeys = (positions: number[], key: string) => {
+    const copyOfStates = [...states];
+    if (positions.length > 0) {
+      positions.forEach((index) => {
+        copyOfStates[index].guessed = true;
+      });
+    }
+    setStates(copyOfStates);
+  };
+
+  console.log(states)
 
   return (
     <>
