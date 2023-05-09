@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BiMenu, BiX } from "react-icons/bi";
 
-const Navbar: React.FC = () => {
+export default function Navbar() {
   const [openMenu, setOpenMenu] = useState(false);
 
   const toggleMenu = () => {
@@ -53,4 +53,3 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar;

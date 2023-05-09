@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import { BsArrowRightShort } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Head from "next/head";
 
 // --- Color Pallet ---
 // Navber: blue-900
@@ -23,16 +24,21 @@ const Home = () => {
 
   // INITIAL STATE
   const fetchPokemon = async () => {
-    const randomId = Math.floor(Math.random() * 100);
-    const url = `https://pokeapi.co/api/v2/pokemon/${randomId}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    console.log(data);
-    const pokeName = data.name;
-    const pokeImg = data.sprites.other.home.front_default;
-    setName(pokeName);
-    setImg(pokeImg);
-    setStates(deriveInitialState(name));
+    try {
+      const randomId = Math.floor(Math.random() * 100);
+      const url = `https://pokeapi.co/api/v2/pokemon/${randomId}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      // console.log(data);
+      const pokeName = data.name;
+      const pokeImg = data.sprites.other.home.front_default;
+      setName(pokeName);
+      setImg(pokeImg);
+      setStates(deriveInitialState(name));
+      console.log(pokeName);
+    } catch (error) {
+      console.error(`⚠️ERROR⚠️${error}`);
+    }
   };
 
   useEffect(() => {
@@ -47,12 +53,41 @@ const Home = () => {
         key: letter,
       };
     });
-    console.log(arr);
     return initialGameState;
+  };
+
+  // WHEN A KEY IS PRESSED
+  useEffect(() => {
+    const handleKeydown = (e) => {
+      console.log(e.key);
+
+      const positions: number[] = checkKeyInName(e.key, name); // [2,4] Index of the pressed Key in the name
+      console.log(positions);
+    };
+
+    window.addEventListener("keydown", handleKeydown);
+    return () => {
+      window.removeEventListener("keydown", handleKeydown);
+    };
+  }, [name]);
+
+  const checkKeyInName = (pressedKey, name) => {
+    const positionsArr = [];
+    let position: number = name.indexOf(pressedKey); // Check index of the pressed key in the name (Not: -1)
+    console.log(pressedKey, name);
+    while (position !== -1) {
+      positionsArr.push(position);
+      position = name.indexOf(pressedKey, position + 1);
+    }
+
+    return positionsArr;
   };
 
   return (
     <>
+      <Head>
+        <title>Pokémon App</title>
+      </Head>
       <Navbar />
       <main className="bg-green-100/50 flex flex-col items-center min-h-screen">
         {/* CONTAINER */}
@@ -74,8 +109,16 @@ const Home = () => {
             </button>
           </div>
           {/* POKEMON */}
-          <div className="w-64 md:w-80 mb-3">
-            <Image src={img} alt={name} width={500} height={500} />
+          <div className="w-64 md:w-80 mb-3 flex items-center justify-center">
+            {img.length > 0 && (
+              <Image
+                priority={true}
+                src={img}
+                alt={name}
+                width={300}
+                height={300}
+              />
+            )}
           </div>
           <Input />
         </div>
