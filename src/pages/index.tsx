@@ -12,11 +12,10 @@ import Head from "next/head";
 // Score:  cyan-400
 // BG:     green-100/50
 
-interface GuessedState {
+export interface GuessedState {
   guessed: boolean;
   key: string;
 }
-
 const Home = () => {
   const [name, setName] = useState("");
   const [img, setImg] = useState("");
@@ -34,7 +33,7 @@ const Home = () => {
       const pokeImg = data.sprites.other.home.front_default;
       setName(pokeName);
       setImg(pokeImg);
-      setStates(deriveInitialState(name));
+      setStates(deriveInitialState(pokeName));
       console.log(pokeName);
     } catch (error) {
       console.error(`⚠️ERROR⚠️${error}`);
@@ -55,13 +54,14 @@ const Home = () => {
     });
     return initialGameState;
   };
+
   // WHEN A KEY IS PRESSED
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
       console.log(e.key);
 
       const positions: number[] = checkKeyInName(e.key, name); // [2,4] Index of the pressed Key in the name
-      displayCorrectKeys(positions, e.key); // (states.guessed → true)
+      displayCorrectKeys(positions); // (states.guessed → true) if it's correctly guessed
       console.log(positions);
     };
 
@@ -78,14 +78,14 @@ const Home = () => {
     // console.log(pressedKey, name);
     while (position !== -1) {
       positionsArr.push(position);
-      position = name.indexOf(pressedKey, position + 1);
+      position = name.indexOf(pressedKey, position + 1); //indexOf(searchElement, fromIndex):at which to start searching
     }
 
     return positionsArr;
   };
 
-  // Display only correctly guessed Keys (states.guessed → true)
-  const displayCorrectKeys = (positions: number[], key: string) => {
+  // Switch (states.guessed → true) if it's correctly guessed
+  const displayCorrectKeys = (positions: number[]) => {
     const copyOfStates = [...states];
     if (positions.length > 0) {
       positions.forEach((index) => {
@@ -95,7 +95,7 @@ const Home = () => {
     setStates(copyOfStates);
   };
 
-  console.log(states)
+  console.log(states);
 
   return (
     <>
@@ -134,7 +134,7 @@ const Home = () => {
               />
             )}
           </div>
-          <Input />
+          <Input states={states} />
         </div>
       </main>
     </>
