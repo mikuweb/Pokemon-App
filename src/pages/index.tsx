@@ -94,8 +94,11 @@ const Home = () => {
     }
     setStates(copyOfStates);
   };
-
   console.log(states);
+
+  // CHECK IF ALL LETTER OF THE NAME IS GUESSED
+  const isCompleted = states.every((state) => state.guessed);
+  console.log(isCompleted);
 
   return (
     <>
@@ -117,10 +120,12 @@ const Home = () => {
                 10
               </span>
             </div>
-            <button className="px-3 py-1 text-lg md:text-xl flex items-center gap-1 font-semibold border-2 border-blue-600 bg-white hover:bg-blue-100 transition text-blue-600 rounded-full">
-              <span>Next</span>
-              <BsArrowRightShort size={25} />
-            </button>
+            {isCompleted && (
+              <button className="px-3 py-1 text-lg md:text-xl flex items-center gap-1 font-semibold border-2 border-blue-600 bg-white hover:bg-blue-100 transition text-blue-600 rounded-full">
+                <span>Next</span>
+                <BsArrowRightShort size={25} />
+              </button>
+            )}
           </div>
           {/* POKEMON */}
           <div className="w-64 md:w-80 mb-3 flex items-center justify-center">
