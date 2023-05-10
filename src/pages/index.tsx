@@ -20,6 +20,7 @@ const Home = () => {
   const [name, setName] = useState("");
   const [img, setImg] = useState("");
   const [states, setStates] = useState<GuessedState[]>([]);
+  const [score, setScore] = useState(0);
 
   // INITIAL STATE
   const fetchPokemon = async () => {
@@ -45,7 +46,7 @@ const Home = () => {
   }, []);
 
   const deriveInitialState = (name: string) => {
-    let arr = name.split(""); // turns "pikachu" into ['p', 'i', 'k', 'a', 'c', 'h', 'u']
+    let arr = name.split(""); //==>turns "pikachu" into ['p', 'i', 'k', 'a', 'c', 'h', 'u']
     const initialGameState = arr.map((letter) => {
       return {
         guessed: false,
@@ -60,9 +61,10 @@ const Home = () => {
     const handleKeydown = (e: KeyboardEvent) => {
       console.log(e.key);
 
-      const positions: number[] = checkKeyInName(e.key, name); // [2,4] Index of the pressed Key in the name
-      displayCorrectKeys(positions); // (states.guessed → true) if it's correctly guessed
-      console.log(positions);
+      const positions: number[] = checkKeyInName(e.key, name); //==>[2,4] Index of the pressed Key in the name
+      displayCorrectKeys(positions); //==>(states.guessed → true) if it's correctly guessed
+      updateScore(positions); //==>Update score
+      // console.log(positions);
     };
 
     window.addEventListener("keydown", handleKeydown);
@@ -71,20 +73,20 @@ const Home = () => {
     };
   }, [name]);
 
-  // Index of the pressed Key in the name (ex)[2, 4]
+  //==>Index of the pressed Key in the name (ex)[2, 4]
   const checkKeyInName = (pressedKey: string, name: string) => {
     const positionsArr = [];
-    let position: number = name.indexOf(pressedKey); // Check index of the pressed key in the name (Not: -1)
+    let position: number = name.indexOf(pressedKey); //==>Check index of the pressed key in the name (Not: -1)
     // console.log(pressedKey, name);
     while (position !== -1) {
       positionsArr.push(position);
-      position = name.indexOf(pressedKey, position + 1); //indexOf(searchElement, fromIndex):at which to start searching
+      position = name.indexOf(pressedKey, position + 1); //==>indexOf(searchElement, fromIndex):at which to start searching
     }
 
     return positionsArr;
   };
 
-  // Switch (states.guessed → true) if it's correctly guessed
+  //==>Switch (states.guessed → true) if it's correctly guessed
   const displayCorrectKeys = (positions: number[]) => {
     const copyOfStates = [...states];
     if (positions.length > 0) {
@@ -94,11 +96,22 @@ const Home = () => {
     }
     setStates(copyOfStates);
   };
-  console.log(states);
+  // console.log(states);
+
+  //==>Update score correct:+15 / wrong:-10
+  //QUESTION: How to disable to update score when "isCompleted"?
+  const updateScore = (positions: number[]) => {
+    console.log(isCompleted);
+    if (!isCompleted) {
+      positions.length > 0
+        ? setScore((preScore) => preScore + 15)
+        : setScore((preScore) => preScore - 10);
+    }
+  };
 
   // CHECK IF ALL LETTER OF THE NAME IS GUESSED
   const isCompleted = states.every((state) => state.guessed);
-  console.log(isCompleted);
+  // console.log(isCompleted);
 
   return (
     <>
@@ -117,11 +130,11 @@ const Home = () => {
           <div className="mt-5 flex flex-col md:flex-row items-center gap-4 md:gap-13">
             <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-white border-[14px]  border-cyan-400/40 flex justify-center items-center">
               <span className="font-bold text-4xl md:text-5xl text-cyan-400">
-                10
+                {score}
               </span>
             </div>
             {isCompleted && (
-              <button className="px-3 py-1 text-lg md:text-xl flex items-center gap-1 font-semibold border-2 border-blue-600 bg-white hover:bg-blue-100 transition text-blue-600 rounded-full">
+              <button className="animate-bounce px-3 py-1 text-lg md:text-xl flex items-center gap-1 font-semibold border-2 border-blue-600 bg-white hover:bg-blue-100 text-blue-600 rounded-full">
                 <span>Next</span>
                 <BsArrowRightShort size={25} />
               </button>
