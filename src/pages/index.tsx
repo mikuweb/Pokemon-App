@@ -4,6 +4,8 @@ import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Head from "next/head";
+import RuleModal from "@/components/RuleModal";
+import Button from "@/components/Button";
 
 // --- Color Pallet ---
 // Navber: blue-900
@@ -21,6 +23,7 @@ const Home = () => {
   const [img, setImg] = useState("");
   const [states, setStates] = useState<GuessedState[]>([]);
   const [score, setScore] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
 
   // INITIAL STATE
   const fetchPokemon = async () => {
@@ -118,6 +121,11 @@ const Home = () => {
     fetchPokemon();
   };
 
+  // OPEN | CLOSE RULE-MODAL
+  const toggleModal = () => {
+    setIsOpen((preClick) => !preClick);
+  };
+
   return (
     <>
       <Head>
@@ -127,9 +135,13 @@ const Home = () => {
       <main className="bg-green-100/50 flex flex-col items-center min-h-screen">
         {/* CONTAINER */}
         <div className="w-fit md:w-1/2 md:max-w-screen-sm flex flex-col items-center">
-          <button className=" w-fit text-sm px-3 py-1 mt-3 mb-1 md:my-4 bg-yellow-400 hover:bg-yellow-500 text-blue-600 rounded-full">
+          <button
+            onClick={toggleModal}
+            className=" w-fit text-sm px-3 py-1 mt-3 mb-1 md:my-4 bg-yellow-400 hover:bg-yellow-500 text-blue-600 rounded-full"
+          >
             LEARN THE RULES
           </button>
+          {isOpen && <RuleModal toggleModal={toggleModal} />}
           <h1 className="font-bold text-3xl md:text-4xl">Guess the Pokémon!</h1>
           {/* SCORE & NEXT BTN */}
           <div className="mt-5 flex flex-col md:flex-row items-center gap-4 md:gap-13">
@@ -139,13 +151,10 @@ const Home = () => {
               </span>
             </div>
             {isCompleted && (
-              <button
-                onClick={handleNext}
-                className="animate-bounce px-3 py-1 text-lg md:text-xl flex items-center justify-center gap-1 font-semibold border-2 border-blue-600 bg-white hover:bg-blue-100 text-blue-600 rounded-full"
-              >
+              <Button onClick={handleNext}>
                 <span>Next!</span>
                 <IoIosArrowDroprightCircle size={25} />
-              </button>
+              </Button>
             )}
           </div>
           {/* POKEMON */}
