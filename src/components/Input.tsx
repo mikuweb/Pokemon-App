@@ -3,12 +3,16 @@ import React from "react";
 
 interface InputProps {
   states: GuessedState[];
+  blink: boolean;
 }
 
-const Input: React.FC<InputProps> = ({ states }) => {
+const Input: React.FC<InputProps> = ({ states, blink }) => {
+  const borderColor = blink ? "border-cyan-400" : "border-blue-900";
   return (
     //TODO How to blink border color when key is pressed
-    <div className="w-3/4 py-2 lg:py-3 text-2xl lg:text-4xl font-bold flex items-center justify-center rounded-3xl bg-white border-2 border-blue-900 uppercase">
+    <div
+      className={`${borderColor} border-2 w-3/4 py-2 lg:py-3 text-2xl lg:text-4xl font-bold flex items-center justify-center rounded-3xl bg-white uppercase`}
+    >
       {states.map((state, index) =>
         state.guessed ? (
           <span key={index}>{state.key}</span>

@@ -15,6 +15,8 @@ import Confetti from "react-confetti";
 // Score:  cyan-400
 // BG:     green-100/50
 
+//TODO ICON?:https://icon-sets.iconify.design/ic/twotone-catching-pokemon/
+
 export interface GuessedState {
   guessed: boolean;
   key: string;
@@ -25,6 +27,7 @@ const Home = () => {
   const [states, setStates] = useState<GuessedState[]>([]);
   const [score, setScore] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [blink, setBlink] = useState(false);
 
   // CHECK IF ALL LETTER OF THE NAME IS GUESSED
   const isCompleted = states.every((state) => state.guessed);
@@ -46,7 +49,7 @@ const Home = () => {
       const url = `https://pokeapi.co/api/v2/pokemon/${randomId}`;
       const res = await fetch(url);
       const data = await res.json();
-      // console.log(data);
+      console.log(data);
       const pokeName = data.name;
       const pokeImg = data.sprites.other.home.front_default;
       setName(pokeName);
@@ -82,6 +85,9 @@ const Home = () => {
       displayCorrectKeys(positions); //==>(states.guessed → true) if it's correctly guessed
       updateScore(positions); //==>Update score
       // console.log(positions);
+
+      setBlink(true);
+      setTimeout(() => setBlink(false), 200);
     };
 
     window.addEventListener("keydown", handleKeydown);
@@ -173,7 +179,7 @@ const Home = () => {
               />
             )}
           </div>
-          <Input states={states} />
+          <Input states={states} blink={blink}/>
         </div>
       </main>
     </>
