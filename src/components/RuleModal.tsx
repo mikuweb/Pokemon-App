@@ -40,14 +40,13 @@ const RuleModal: React.FC<RuleModalProps> = ({ toggleModal }) => {
             className="
           h-full
           md:h-auto
-          border-2
           rounded-lg
           shadow-lg
           relative
           flex
           flex-col
           w-full
-          bg-white
+          bg-blue-950
           outline-none
           focus:outline-none
           "
@@ -62,27 +61,30 @@ const RuleModal: React.FC<RuleModalProps> = ({ toggleModal }) => {
             rounded-t
             "
             >
-              <h3 className="text-3xl font-semibold">Rule of the game</h3>
+              <h3 className="text-3xl font-bold text-yellow-400">
+                Rule of the game
+              </h3>
               <button
                 onClick={toggleModal}
                 className="
               p-1
               ml-auto
               border-2
-              border-blue-600
-              hover:bg-blue-100
-              text-blue-600
+              border-white
               hover:opacity-70
+              text-white
               rounded-full
               transition
               "
               >
-                <AiOutlineClose size={20} />
+                <AiOutlineClose size={25} />
               </button>
             </div>
             {/* Body */}
             <div
-              className="relative
+              className="
+              text-white
+              relative
             pb-10
             flex
             justify-center
@@ -90,13 +92,13 @@ const RuleModal: React.FC<RuleModalProps> = ({ toggleModal }) => {
             >
               <ul className="list-disc text-2xl">
                 <li className="pb-2">
-                  <p>You guess the Pokémon's name</p>
+                  <p>You guess the Pokémon name</p>
                 </li>
                 <li className="pb-2">
                   <p>Every correct guess awards 10 Pts</p>
                 </li>
                 <li className="pb-2">
-                  <p>Solving is awarded 20 Pts</p>
+                  <p>Solving award 20 Pts</p>
                 </li>
                 <li className="pb-2">
                   <p>Every mistake deducts 15 Pts</p>

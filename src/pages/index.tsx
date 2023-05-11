@@ -6,6 +6,7 @@ import Image from "next/image";
 import Head from "next/head";
 import RuleModal from "@/components/RuleModal";
 import Button from "@/components/Button";
+import Confetti from "react-confetti";
 
 // --- Color Pallet ---
 // Navber: blue-900
@@ -24,6 +25,19 @@ const Home = () => {
   const [states, setStates] = useState<GuessedState[]>([]);
   const [score, setScore] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+
+  // CHECK IF ALL LETTER OF THE NAME IS GUESSED
+  const isCompleted = states.every((state) => state.guessed);
+
+  //HANDLE CLICK BUTTON TO DISPLAY NEXT POKEMON
+  const handleNext = () => {
+    fetchPokemon();
+  };
+
+  // OPEN | CLOSE RULE-MODAL
+  const toggleModal = () => {
+    setIsOpen((preClick) => !preClick);
+  };
 
   // INITIAL STATE
   const fetchPokemon = async () => {
@@ -101,29 +115,18 @@ const Home = () => {
   };
   // console.log(states);
 
-  //==>Update score correct:+15 / wrong:-10
-  //TODO: How to disable to update score when "isCompleted"?
+  //==>Update score correct:+10 / wrong:-15
   const updateScore = (positions: number[]) => {
     console.log(isCompleted);
+    //TODO: How to disable to update score when "isCompleted"?
+    //TODO: How to awards 20Pts when all letter is guessed?
     if (!isCompleted) {
       positions.length > 0
-        ? setScore((preScore) => preScore + 15)
-        : setScore((preScore) => preScore - 10);
+        ? setScore((preScore) => preScore + 10)
+        : setScore((preScore) => preScore - 15);
+    } else {
+      return;
     }
-  };
-
-  // CHECK IF ALL LETTER OF THE NAME IS GUESSED
-  const isCompleted = states.every((state) => state.guessed);
-  // console.log(isCompleted);
-
-  //HANDLE CLICK BUTTON TO DISPLAY NEXT POKEMON
-  const handleNext = () => {
-    fetchPokemon();
-  };
-
-  // OPEN | CLOSE RULE-MODAL
-  const toggleModal = () => {
-    setIsOpen((preClick) => !preClick);
   };
 
   return (
@@ -135,6 +138,7 @@ const Home = () => {
       <main className="bg-green-100/50 flex flex-col items-center min-h-screen">
         {/* CONTAINER */}
         <div className="w-fit md:w-1/2 md:max-w-screen-sm flex flex-col items-center">
+          {isCompleted && <Confetti />}
           <button
             onClick={toggleModal}
             className=" w-fit text-sm px-3 py-1 mt-3 mb-1 md:my-4 bg-yellow-400 hover:bg-yellow-500 text-blue-600 rounded-full"
