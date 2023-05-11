@@ -1,6 +1,6 @@
 import Input from "@/components/Input";
 import Navbar from "../components/Navbar";
-import { BsArrowRightShort } from "react-icons/bs";
+import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Head from "next/head";
@@ -99,7 +99,7 @@ const Home = () => {
   // console.log(states);
 
   //==>Update score correct:+15 / wrong:-10
-  //QUESTION: How to disable to update score when "isCompleted"?
+  //TODO: How to disable to update score when "isCompleted"?
   const updateScore = (positions: number[]) => {
     console.log(isCompleted);
     if (!isCompleted) {
@@ -112,6 +112,11 @@ const Home = () => {
   // CHECK IF ALL LETTER OF THE NAME IS GUESSED
   const isCompleted = states.every((state) => state.guessed);
   // console.log(isCompleted);
+
+  //HANDLE CLICK BUTTON TO DISPLAY NEXT POKEMON
+  const handleNext = () => {
+    fetchPokemon();
+  };
 
   return (
     <>
@@ -134,9 +139,12 @@ const Home = () => {
               </span>
             </div>
             {isCompleted && (
-              <button className="animate-bounce px-3 py-1 text-lg md:text-xl flex items-center gap-1 font-semibold border-2 border-blue-600 bg-white hover:bg-blue-100 text-blue-600 rounded-full">
-                <span>Next</span>
-                <BsArrowRightShort size={25} />
+              <button
+                onClick={handleNext}
+                className="animate-bounce px-3 py-1 text-lg md:text-xl flex items-center justify-center gap-1 font-semibold border-2 border-blue-600 bg-white hover:bg-blue-100 text-blue-600 rounded-full"
+              >
+                <span>Next!</span>
+                <IoIosArrowDroprightCircle size={25} />
               </button>
             )}
           </div>
