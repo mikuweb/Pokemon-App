@@ -9,7 +9,6 @@ interface InputProps {
 const Input: React.FC<InputProps> = ({ states, blink }) => {
   const borderColor = blink ? "border-cyan-400" : "border-blue-900";
   return (
-    //TODO How to blink border color when key is pressed
     <div
       className={`${borderColor} border-2 w-3/4 py-2 lg:py-3 text-2xl lg:text-4xl font-bold flex items-center justify-center rounded-3xl bg-white uppercase`}
     >

@@ -140,7 +140,6 @@ const Home = () => {
       <Head>
         <title>Pokémon App</title>
       </Head>
-      <Navbar />
       <main className="bg-green-100/50 flex flex-col items-center min-h-screen">
         {/* CONTAINER */}
         <div className="w-fit md:w-1/2 md:max-w-screen-sm flex flex-col items-center">
@@ -179,7 +178,7 @@ const Home = () => {
               />
             )}
           </div>
-          <Input states={states} blink={blink}/>
+          <Input states={states} blink={blink} />
         </div>
       </main>
     </>

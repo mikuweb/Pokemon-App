@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useState } from "react";
 import { BiMenu, BiX } from "react-icons/bi";
 
@@ -26,20 +27,20 @@ export default function Navbar() {
       >
         <ul className="flex flex-col md:flex-row md:items-center justify-end gap-8 md:gap-4">
           <li>
-            <a
+            <Link
+              href="/"
               className="text-white rounded-full py-1 px-2 hover:border-2 focus:border-2 focus:border-cyan-400"
-              href="#"
             >
               Guess Pokémon
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
+              href="/search"
               className="text-white rounded-full py-1 px-2 hover:border-2 focus:border-2 focus:border-cyan-400"
-              href="#"
             >
               Search
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
