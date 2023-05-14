@@ -1,5 +1,4 @@
 import Input from "@/components/Input";
-import Navbar from "../components/Navbar";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { useEffect, useState } from "react";
 import Image from "next/image";

@@ -19,7 +19,7 @@ const RuleModal: React.FC<RuleModalProps> = ({ toggleModal }) => {
       z-50
       outline-none
       focus:outline-none
-      bg-neutral-800
+      bg-neutral-700
       bg-opacity-70
       "
       >
@@ -46,7 +46,7 @@ const RuleModal: React.FC<RuleModalProps> = ({ toggleModal }) => {
           flex
           flex-col
           w-full
-          bg-blue-950
+          bg-blue-700
           outline-none
           focus:outline-none
           "
