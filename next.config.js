@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 
+// TODO:DELETE 'bulbapedia.bulbagarden.net'
+
 module.exports = {
   reactStrictMode: false,
   images: {
-    domains: ["pokeapi.co", "raw.githubusercontent.com"],
+    domains: ["pokeapi.co", "raw.githubusercontent.com", 'bulbapedia.bulbagarden.net'],
     remotePatterns: [
       {
         protocol: "https",
