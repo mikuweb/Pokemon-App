@@ -159,7 +159,7 @@ const Home = () => {
               </span>
             </div>
             {isCompleted && (
-              <Button onClick={handleNext}>
+              <Button onClick={handleNext} className="animate-bounce">
                 <span>Next!</span>
                 <IoIosArrowDroprightCircle size={25} />
               </Button>
