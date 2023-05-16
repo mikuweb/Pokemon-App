@@ -9,7 +9,7 @@ import {
   IoIosArrowDropleftCircle,
 } from "react-icons/io";
 
-interface PokemonData {
+export interface PokemonData {
   id: number;
   imgUrl: string;
   name: string;
@@ -19,9 +19,15 @@ interface ListProps {
   pokemonArr: PokemonData[];
 }
 
-const List: NextPage<ListProps> = ({ pokemonArr }) => {
-  console.log(pokemonArr);
+const List: NextPage<ListProps> = ({ data }) => {
   const [inputvalue, setInputValue] = useState("");
+
+  const handlePrev = () => {
+    console.log("Clicked PREV");
+  };
+  const handleNext = () => {
+    console.log("Clicked NEXT");
+  };
 
   return (
     <div className="bg-green-100/50 flex flex-col items-center min-h-screen">
@@ -49,7 +55,7 @@ const List: NextPage<ListProps> = ({ pokemonArr }) => {
         {/* CARD CONTAINER */}
         <div className="border-2 max-w-xl md:max-w-full mx-auto mt-4 h-fit grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14 md:gap-10 lg:gap-8">
           {/* CARD */}
-          {pokemonArr.map((pokemon) => {
+          {data.map((pokemon) => {
             return (
               <div key={pokemon.id} className=" h-fit bg-white rounded-lg">
                 <div className="bg-slate-200 rounded-t-lg">
@@ -67,12 +73,12 @@ const List: NextPage<ListProps> = ({ pokemonArr }) => {
         </div>
         {/* ARROW BUTTON */}
         <div className="p-5 flex justify justify-between">
-          <Button onClick={() => {}} className="">
+          <Button onClick={handlePrev} className="">
             <IoIosArrowDropleftCircle />
             <span>Previous</span>
           </Button>
 
-          <Button onClick={() => {}} className="">
+          <Button onClick={handleNext} className="">
             <span>Next</span>
             <IoIosArrowDroprightCircle />
           </Button>
@@ -84,23 +90,6 @@ const List: NextPage<ListProps> = ({ pokemonArr }) => {
 
 export default List;
 
-//getStaticPaths
-export async function getStaticPaths() {
-  const response = await fetch("https://pokeapi.co/api/v2/pokemon");
-  const data = await response.json();
-  const count = data.count;
-  const amountPages = Math.ceil(count / 20); // ==>65 pages(20 / 1281 = 64.05)
-  const pages = Array.from(Array(amountPages).keys());
-  const paths = pages.map((p) => ({
-    params: { pageId: "" + p, limit: data.results.length },
-  }));
-
-  return {
-    paths,
-    fallback: false,
-  };
-}
-
 // Static Generation
 export async function getStaticProps(context: {
   pageId: number;
@@ -111,21 +100,10 @@ export async function getStaticProps(context: {
       context.pageId * context.limit
     }`
   );
-  // const { results } = await response.json();
-  // const pokemonArr = [];
-
-  // for (const entry of results) {
-  //   const result = await fetch(entry.url);
-  //   const data = await result.json();
-  //   pokemonArr.push({
-  //     imgUrl: data.sprites.other.home.front_default,
-  //     name: data.name,
-  //   });
-  // }
   const pokemonArr: PokemonData[] = [];
-
   const data = await response.json();
   const results = data.results; //[] 20 items
+
   results.forEach(async (entry: { url: string }) => {
     const result = await fetch(entry.url);
     const pokemonData = await result.json();
@@ -136,9 +114,28 @@ export async function getStaticProps(context: {
     });
   });
 
+  console.log(pokemonArr)
+
   return {
     props: {
       data: pokemonArr,
     },
   };
 }
+
+// import React from "react";
+
+// const Search = () => {
+//   return (
+//     <div className="bg-green-100/50 flex flex-col items-center min-h-screen">
+//       <div className="bg-white overflow-hidden w-full md:w-9/12 md:max-w-screen-lg flex flex-col justify-center items-center h-screen gap-3 md:gap-5">
+//         <h1 className="text-3xl md:text-4xl font-bold">
+//           This page is under construction
+//         </h1>
+//         <p className="md:text-lg">We are working on it!</p>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Search;

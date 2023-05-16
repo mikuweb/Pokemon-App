@@ -31,15 +31,15 @@ export default function Navbar() {
               href="/"
               className="text-white rounded-full py-1 px-2 hover:border-2 focus:border-2 focus:border-cyan-400"
             >
-              Guess Pokémon
+              Game
             </Link>
           </li>
           <li>
             <Link
-              href="/search"
+              href="/list/1"
               className="text-white rounded-full py-1 px-2 hover:border-2 focus:border-2 focus:border-cyan-400"
             >
-              Search
+              Pokémon list
             </Link>
           </li>
         </ul>
