@@ -9,17 +9,18 @@ import {
   IoIosArrowDropleftCircle,
 } from "react-icons/io";
 
-interface ListProps {
-  pokemon: Array<{
-    id: number;
-    name: string;
-    // Add other props from API
-  }>;
-  next: string;
-  prev: string;
+interface PokemonData {
+  id: number;
+  imgUrl: string;
+  name: string;
 }
 
-const List: NextPage<ListProps> = ({ pokemon, next, prev }) => {
+interface ListProps {
+  pokemonArr: PokemonData[];
+}
+
+const List: NextPage<ListProps> = ({ pokemonArr }) => {
+  console.log(pokemonArr);
   const [inputvalue, setInputValue] = useState("");
 
   return (
@@ -48,12 +49,12 @@ const List: NextPage<ListProps> = ({ pokemon, next, prev }) => {
         {/* CARD CONTAINER */}
         <div className="border-2 max-w-xl md:max-w-full mx-auto mt-4 h-fit grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14 md:gap-10 lg:gap-8">
           {/* CARD */}
-          {pokemon.map((pokemon) => {
+          {pokemonArr.map((pokemon) => {
             return (
               <div key={pokemon.id} className=" h-fit bg-white rounded-lg">
                 <div className="bg-slate-200 rounded-t-lg">
                   <Image
-                    src="https://bulbapedia.bulbagarden.net/wiki/File:0025Pikachu.png"
+                    src={pokemon.imgUrl}
                     alt="pikachu"
                     width={500}
                     height={500}
@@ -90,7 +91,9 @@ export async function getStaticPaths() {
   const count = data.count;
   const amountPages = Math.ceil(count / 20); // ==>65 pages(20 / 1281 = 64.05)
   const pages = Array.from(Array(amountPages).keys());
-  const paths = pages.map((p) => ({ params: { pageId: "" + p } }));
+  const paths = pages.map((p) => ({
+    params: { pageId: "" + p, limit: data.results.length },
+  }));
 
   return {
     paths,
@@ -99,15 +102,43 @@ export async function getStaticPaths() {
 }
 
 // Static Generation
-export async function getStaticProps(context) {
-  const response = await fetch("https://pokeapi.co/api/v2/pokemon/");
+export async function getStaticProps(context: {
+  pageId: number;
+  limit: number;
+}) {
+  const response = await fetch(
+    `https://pokeapi.co/api/v2/pokemon?limit=${context.limit}offset=${
+      context.pageId * context.limit
+    }`
+  );
+  // const { results } = await response.json();
+  // const pokemonArr = [];
+
+  // for (const entry of results) {
+  //   const result = await fetch(entry.url);
+  //   const data = await result.json();
+  //   pokemonArr.push({
+  //     imgUrl: data.sprites.other.home.front_default,
+  //     name: data.name,
+  //   });
+  // }
+  const pokemonArr: PokemonData[] = [];
+
   const data = await response.json();
-  // console.log(data);
+  const results = data.results; //[] 20 items
+  results.forEach(async (entry: { url: string }) => {
+    const result = await fetch(entry.url);
+    const pokemonData = await result.json();
+    pokemonArr.push({
+      id: pokemonData.id,
+      imgUrl: pokemonData.sprites.other.home.front_default,
+      name: pokemonData.name,
+    });
+  });
+
   return {
     props: {
-      pokemon: data.results,
-      next: data.next,
-      prev: data.previous,
+      data: pokemonArr,
     },
   };
 }
