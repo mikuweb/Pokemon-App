@@ -103,8 +103,10 @@ const Search = () => {
   return (
     <div className="bg-green-100/50 flex flex-col items-center min-h-screen">
       <div className="bg-white overflow-hidden w-full md:w-9/12 md:max-w-screen-lg flex flex-col justify-center items-center h-screen gap-3 md:gap-5">
-        <h1 className="text-3xl md:text-4xl font-bold">This page is under construction</h1>
-        <p className="md:text-lg">We're working on it!</p>
+        <h1 className="text-3xl md:text-4xl font-bold">
+          This page is under construction
+        </h1>
+        <p className="md:text-lg">We are working on it!</p>
       </div>
     </div>
   );
