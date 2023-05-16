@@ -36,10 +36,10 @@ export default function Navbar() {
           </li>
           <li>
             <Link
-              href="/search"
+              href="/list"
               className="text-white rounded-full py-1 px-2 hover:border-2 focus:border-2 focus:border-cyan-400"
             >
-              Search
+              List
             </Link>
           </li>
         </ul>
