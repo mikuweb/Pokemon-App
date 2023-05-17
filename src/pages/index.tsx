@@ -158,12 +158,15 @@ const Home = () => {
                 {score}
               </span>
             </div>
-            {isCompleted && (
-              <Button onClick={handleNext} className="animate-bounce">
-                <span>Next!</span>
-                <IoIosArrowDroprightCircle size={25} />
-              </Button>
-            )}
+
+            <Button
+              onClick={handleNext}
+              className="animate-bounce"
+              disabled={!isCompleted}
+            >
+              <span>Next!</span>
+              <IoIosArrowDroprightCircle size={25} />
+            </Button>
           </div>
           {/* POKEMON */}
           <div className="w-64 md:w-80 mb-3 flex items-center justify-center">

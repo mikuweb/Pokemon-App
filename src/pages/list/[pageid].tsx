@@ -23,21 +23,37 @@ interface PageProps {
 const Page: NextPage<PageProps> = ({ data }) => {
   console.log(data);
   const [inputvalue, setInputValue] = useState("");
-
+  const [currentPage, setcurrentPage] = useState("0");
+  const [nextPage, setNextPage] = useState(true);
+  const [prevPage, setPrevPage] = useState(false);
+  // TODO DISABLED & STYLE
   const router = useRouter();
   const pageId = router.query.pageId;
 
   const handlePrev = () => {
-    console.log("Clicked PREV");
+    if (parseInt(currentPage) > 0) {
+      const prevPage = parseInt(currentPage) - 1;
+      setcurrentPage(prevPage.toString());
+      router.push(`/list/${prevPage}`);
+    } else {
+      setPrevPage(false);
+    }
   };
   const handleNext = () => {
-    console.log("Clicked NEXT");
+    if (parseInt(currentPage) < 64) {
+      setPrevPage(true);
+      const nextPage = parseInt(currentPage) + 1;
+      setcurrentPage(nextPage.toString());
+      router.push(`/list/${nextPage}`);
+    } else {
+      setNextPage(false);
+    }
   };
 
   return (
     <>
       <div className="flex flex-col">
-        <div className="text-xl">Pokémon Page: {pageId})</div>
+        <div className="text-xl">Pokémon Page: {pageId}</div>
       </div>
 
       <div className="bg-green-100/50 flex flex-col items-center min-h-screen">
@@ -83,12 +99,20 @@ const Page: NextPage<PageProps> = ({ data }) => {
           </div>
           {/* ARROW BUTTON */}
           <div className="p-5 flex justify justify-between">
-            <Button onClick={handlePrev} className="">
+            <Button
+              onClick={handlePrev}
+              className="disabled:bg-slate-300"
+              disabled={!prevPage}
+            >
               <IoIosArrowDropleftCircle />
               <span>Previous</span>
             </Button>
 
-            <Button onClick={handleNext} className="">
+            <Button
+              onClick={handleNext}
+              className="disabled:bg-slate-300"
+              disabled={!nextPage}
+            >
               <span>Next</span>
               <IoIosArrowDroprightCircle />
             </Button>
@@ -129,13 +153,14 @@ export async function getStaticProps(context: { pageId: number }) {
   results.forEach(async (entry: { url: string }) => {
     const result = await fetch(entry.url);
     const pokemonData = await result.json();
+
     pokemonArr.push({
       id: pokemonData.id,
       imgUrl: pokemonData.sprites.other.home.front_default,
       name: pokemonData.name,
     });
   });
-
+  console.log(pokemonArr);
   return {
     props: {
       data: pokemonArr,

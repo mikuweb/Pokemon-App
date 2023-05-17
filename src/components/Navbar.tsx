@@ -36,7 +36,7 @@ export default function Navbar() {
           </li>
           <li>
             <Link
-              href="/list/1"
+              href="/list/0"
               className="text-white rounded-full py-1 px-2 hover:border-2 focus:border-2 focus:border-cyan-400"
             >
               Pokémon list
