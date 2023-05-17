@@ -1,15 +1,14 @@
-import React, { useState }  from "react";;
+import React, { useState } from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-import Button from "@/components/Button"
+import Button from "@/components/Button";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import {
   IoIosArrowDroprightCircle,
   IoIosArrowDropleftCircle,
 } from "react-icons/io";
-
 
 export interface PokemonData {
   id: number;
@@ -18,17 +17,85 @@ export interface PokemonData {
 }
 
 interface PageProps {
-  pokemonArr: PokemonData[];
+  data: PokemonData[];
 }
 
+const Page: NextPage<PageProps> = ({ data }) => {
+  console.log(data);
+  const [inputvalue, setInputValue] = useState("");
 
-const Page:NextPage<PageProps> = ({data}) => {
   const router = useRouter();
   const pageId = router.query.pageId;
+
+  const handlePrev = () => {
+    console.log("Clicked PREV");
+  };
+  const handleNext = () => {
+    console.log("Clicked NEXT");
+  };
+
   return (
-    <div className="flex flex-col">
-      <div className="text-xl">20 Pokémon (Page: {pageId})</div>
-    </div>
+    <>
+      <div className="flex flex-col">
+        <div className="text-xl">Pokémon Page: {pageId})</div>
+      </div>
+
+      <div className="bg-green-100/50 flex flex-col items-center min-h-screen">
+        {/* CONTEINER */}
+        <div className="border-2 overflow-hidden w-full md:w-9/12 md:max-w-screen-lg flex flex-col">
+          {/* INPUT FORM */}
+          <form className="my-4 pr-3 w-10/12 h-16 mx-auto flex gap-3 justify-center items-center bg-white rounded-xl">
+            <label className="relative block">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-5">
+                <HiMagnifyingGlass size={20} color="#64748b" />
+              </span>
+            </label>
+            <input
+              className="h-12 pl-10 w-full rounded-xl bg-slate-200 px-3 focus:outline-blue-900 focus:outline-8"
+              placeholder="Pokémon name or keywords..."
+              value={inputvalue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+              }}
+            />
+            <button className="h-12 px-3 bg-blue-950 rounded-xl text-white hover:opacity-70">
+              Search
+            </button>
+          </form>
+          {/* CARD CONTAINER */}
+          <div className="border-2 max-w-xl md:max-w-full mx-auto mt-4 h-fit grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14 md:gap-10 lg:gap-8">
+            {/* CARD */}
+            {data.map((pokemon) => {
+              return (
+                <div key={pokemon.id} className=" h-fit bg-white rounded-lg">
+                  <div className="bg-slate-200 rounded-t-lg">
+                    <Image
+                      src={pokemon.imgUrl}
+                      alt={pokemon.name}
+                      width={500}
+                      height={500}
+                    />
+                  </div>
+                  <div className="h-16">{pokemon.name}</div>
+                </div>
+              );
+            })}
+          </div>
+          {/* ARROW BUTTON */}
+          <div className="p-5 flex justify justify-between">
+            <Button onClick={handlePrev} className="">
+              <IoIosArrowDropleftCircle />
+              <span>Previous</span>
+            </Button>
+
+            <Button onClick={handleNext} className="">
+              <span>Next</span>
+              <IoIosArrowDroprightCircle />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -39,34 +106,26 @@ export async function getStaticPaths() {
   const response = await fetch("https://pokeapi.co/api/v2/pokemon");
   const data = await response.json();
   const count = data.count;
-  const amountPages = Math.ceil(count / data.results.length); // ==>65 pages(20 / 1281 = 64.05)
-  const pages = Array.from(Array(amountPages).keys());
+  const amountPages = Math.ceil(count / data.results.length); // ==>65 pages (20 / 1281 = 64.05)
+  const pages = Array.from(Array(amountPages).keys()); // ==>[0, 1, 2,....64]
   const paths = pages.map((p) => ({
-    params: { pageId: "" + p},
+    params: { pageId: "" + p }, // [{ params: { pageId: '0' } },...{ params: { pageId: '64' } }]
   }));
-
   return {
     paths,
     fallback: false,
   };
 }
 
-// Static Generation
-export async function getStaticProps(context: {
-  pageId: number;
-  limit: number;
-}) {
-
+// Static Site Generation
+export async function getStaticProps(context: { pageId: number }) {
   const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon?limit=20offset=${
-      context.pageId * 20
-    }`
+    `https://pokeapi.co/api/v2/pokemon?limit=20offset=${context.pageId * 20}`
   );
-
   const pokemonArr: PokemonData[] = [];
-
   const data = await response.json();
   const results = data.results; //[] 20 items
+
   results.forEach(async (entry: { url: string }) => {
     const result = await fetch(entry.url);
     const pokemonData = await result.json();

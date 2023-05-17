@@ -5,7 +5,7 @@
 module.exports = {
   reactStrictMode: false,
   images: {
-    domains: ["pokeapi.co", "raw.githubusercontent.com", 'bulbapedia.bulbagarden.net'],
+    domains: ["pokeapi.co", "raw.githubusercontent.com"],
     remotePatterns: [
       {
         protocol: "https",
