@@ -14,6 +14,7 @@ export interface PokemonData {
   id: number;
   imgUrl: string;
   name: string;
+  types: string[];
 }
 
 interface PageProps {
@@ -60,7 +61,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
 
       <div className="bg-green-100/50 flex flex-col items-center min-h-screen">
         {/* CONTEINER */}
-        <div className="border-2 overflow-hidden w-full md:w-9/12 md:max-w-screen-lg flex flex-col">
+        <div className="overflow-hidden w-full md:w-9/12 md:max-w-screen-lg flex flex-col">
           {/* INPUT FORM */}
           <form className="my-4 pr-3 w-10/12 h-16 mx-auto flex gap-3 justify-center items-center bg-white rounded-xl">
             <label className="relative block">
@@ -81,11 +82,14 @@ const Page: NextPage<PageProps> = ({ data }) => {
             </button>
           </form>
           {/* CARD CONTAINER */}
-          <div className="border-2 max-w-xl md:max-w-full mx-auto mt-4 h-fit grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14 md:gap-10 lg:gap-8">
+          <div className="max-w-xl md:max-w-full mx-auto mt-4 h-fit grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14 md:gap-10 lg:gap-8">
             {/* CARD */}
             {data.map((pokemon) => {
               return (
-                <div key={pokemon.id} className=" h-fit bg-white rounded-lg p-">
+                <div
+                  key={pokemon.id}
+                  className=" h-fit bg-white rounded-lg shadow-lg"
+                >
                   <div className="bg-slate-200 rounded-t-lg">
                     <Image
                       src={pokemon.imgUrl}
@@ -95,11 +99,20 @@ const Page: NextPage<PageProps> = ({ data }) => {
                     />
                   </div>
 
-                  <div className="py-1">
+                  <div className="p-1">
                     <div>{`# ${("000" + pokemon.id).slice(-4)}`}</div>
-                    <div className="text-xl font-bold text-center">
+                    <div className="text-xl font-bold text-center uppercase">
                       {pokemon.name}
                     </div>
+                    {pokemon.types.length > 1 ? (
+                      pokemon.types.map((type) => (
+                        <div key={type} className="flex">
+                          <div>{type}</div>
+                        </div>
+                      ))
+                    ) : (
+                      <div>{pokemon.types}</div>
+                    )}
                   </div>
                 </div>
               );
@@ -165,16 +178,17 @@ export async function getStaticProps(context: { params: any }) {
   async function fetchAndPush(entry: { url: string }) {
     const result = await fetch(entry.url); //fetch(...) returns Promise<someDataType> and await fetch(...) returns someDataType
     const pokemonData = await result.json();
-
+    console.log(pokemonData);
     pokemonArr.push({
       id: pokemonData.id,
       imgUrl: pokemonData.sprites.other.home.front_default,
       name: pokemonData.name,
+      types: pokemonData.types.map((type: { name: string }) => type.name),
     });
   }
 
-  // results.forEach(async entry => await fetchAndPush(entry)); [1,2,3].map(...) => [2,5,9]
-  // await results.asyncForEach(async ... ) doesn't exist.
+  // NOT GOOD* results.forEach(async entry => await fetchAndPush(entry));
+  // ** await results.asyncForEach(async ... ) doesn't exist.
   await Promise.all(
     results.map(async (entry: any) => await fetchAndPush(entry))
   );
