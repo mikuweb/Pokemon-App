@@ -163,7 +163,7 @@ export async function getStaticProps(context: { params: any }) {
   //const context = // [{ params: { pageId: '0' } },...{ params: { pageId: '64' } }]
   const { params } = context; // == const params = context.params;
   const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon?limit=20offset=${
+    `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${
       parseInt(params.pageId) * 20
     }`
   );
@@ -193,10 +193,12 @@ export async function getStaticProps(context: { params: any }) {
   // await fetchAndPush(results[2])
   // await fetchAndPush(results[...])
   // await fetchAndPush(results[19])
-
+  //TODO sort()
   return {
     props: {
-      data: pokemonArr,
+      data: pokemonArr.sort((a, b) => {
+        return a.id - b.id;
+      }),
     },
   };
 }
