@@ -14,7 +14,7 @@ export interface PokemonData {
   id: number;
   imgUrl: string;
   name: string;
-  types: string[];
+  // types: string[];
 }
 
 interface PageProps {
@@ -26,7 +26,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
   const [currentPage, setcurrentPage] = useState("0");
   const [nextPage, setNextPage] = useState(true);
   const [prevPage, setPrevPage] = useState(false);
-  // TODO DISABLED & STYLE
+
   const router = useRouter();
   const pageId = router.query.pageId;
 
@@ -60,7 +60,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
       </div>
 
       <div className="bg-green-100/50 flex flex-col items-center min-h-screen">
-        {/* CONTEINER */}
+        {/* CONTAINER */}
         <div className="overflow-hidden w-full md:w-9/12 md:max-w-screen-lg flex flex-col">
           {/* INPUT FORM */}
           <form className="my-4 pr-3 w-10/12 h-16 mx-auto flex gap-3 justify-center items-center bg-white rounded-xl">
@@ -104,15 +104,11 @@ const Page: NextPage<PageProps> = ({ data }) => {
                     <div className="text-xl font-bold text-center uppercase">
                       {pokemon.name}
                     </div>
-                    {pokemon.types.length > 1 ? (
-                      pokemon.types.map((type) => (
-                        <div key={type} className="flex">
-                          <div>{type}</div>
-                        </div>
-                      ))
-                    ) : (
-                      <div>{pokemon.types}</div>
-                    )}
+                    {/* {pokemon.types.map((type) => (
+                      <div key={type} className="flex">
+                        <div>{type}</div>
+                      </div>
+                    ))} */}
                   </div>
                 </div>
               );
@@ -178,12 +174,11 @@ export async function getStaticProps(context: { params: any }) {
   async function fetchAndPush(entry: { url: string }) {
     const result = await fetch(entry.url); //fetch(...) returns Promise<someDataType> and await fetch(...) returns someDataType
     const pokemonData = await result.json();
-    console.log(pokemonData);
     pokemonArr.push({
       id: pokemonData.id,
       imgUrl: pokemonData.sprites.other.home.front_default,
       name: pokemonData.name,
-      types: pokemonData.types.map((type: { name: string }) => type.name),
+      // types: pokemonData.types.map((type: { name: string }) => type.name),
     });
   }
 
