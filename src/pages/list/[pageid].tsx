@@ -21,7 +21,6 @@ interface PageProps {
 }
 
 const Page: NextPage<PageProps> = ({ data }) => {
-  console.log(data);
   const [inputvalue, setInputValue] = useState("");
   const [currentPage, setcurrentPage] = useState("0");
   const [nextPage, setNextPage] = useState(true);
@@ -49,6 +48,9 @@ const Page: NextPage<PageProps> = ({ data }) => {
       setNextPage(false);
     }
   };
+
+  // const num = data.id;
+  // const ret = ( '000' + num ).slice( -4 );
 
   return (
     <>
@@ -83,7 +85,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
             {/* CARD */}
             {data.map((pokemon) => {
               return (
-                <div key={pokemon.id} className=" h-fit bg-white rounded-lg">
+                <div key={pokemon.id} className=" h-fit bg-white rounded-lg p-">
                   <div className="bg-slate-200 rounded-t-lg">
                     <Image
                       src={pokemon.imgUrl}
@@ -92,7 +94,13 @@ const Page: NextPage<PageProps> = ({ data }) => {
                       height={500}
                     />
                   </div>
-                  <div className="h-16">{pokemon.name}</div>
+
+                  <div className="py-1">
+                    <div>{`# ${("000" + pokemon.id).slice(-4)}`}</div>
+                    <div className="text-xl font-bold text-center">
+                      {pokemon.name}
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -101,7 +109,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
           <div className="p-5 flex justify justify-between">
             <Button
               onClick={handlePrev}
-              className="disabled:bg-slate-300"
+              className="disabled:bg-slate-400 disabled:opacity-70"
               disabled={!prevPage}
             >
               <IoIosArrowDropleftCircle />
@@ -142,16 +150,20 @@ export async function getStaticPaths() {
 }
 
 // Static Site Generation
-export async function getStaticProps(context: { pageId: number }) {
+export async function getStaticProps(context: { params: any }) {
+  //const context = // [{ params: { pageId: '0' } },...{ params: { pageId: '64' } }]
+  const { params } = context; // == const params = context.params;
   const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon?limit=20offset=${context.pageId * 20}`
+    `https://pokeapi.co/api/v2/pokemon?limit=20offset=${
+      parseInt(params.pageId) * 20
+    }`
   );
   const pokemonArr: PokemonData[] = [];
   const data = await response.json();
   const results = data.results; //[] 20 items
 
-  results.forEach(async (entry: { url: string }) => {
-    const result = await fetch(entry.url);
+  async function fetchAndPush(entry: { url: string }) {
+    const result = await fetch(entry.url); //fetch(...) returns Promise<someDataType> and await fetch(...) returns someDataType
     const pokemonData = await result.json();
 
     pokemonArr.push({
@@ -159,8 +171,20 @@ export async function getStaticProps(context: { pageId: number }) {
       imgUrl: pokemonData.sprites.other.home.front_default,
       name: pokemonData.name,
     });
-  });
-  console.log(pokemonArr);
+  }
+
+  // results.forEach(async entry => await fetchAndPush(entry)); [1,2,3].map(...) => [2,5,9]
+  // await results.asyncForEach(async ... ) doesn't exist.
+  await Promise.all(
+    results.map(async (entry: any) => await fetchAndPush(entry))
+  );
+  // is the same as
+  // await fetchAndPush(results[0])
+  // await fetchAndPush(results[1])
+  // await fetchAndPush(results[2])
+  // await fetchAndPush(results[...])
+  // await fetchAndPush(results[19])
+
   return {
     props: {
       data: pokemonArr,

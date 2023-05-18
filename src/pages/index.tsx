@@ -161,7 +161,7 @@ const Home = () => {
 
             <Button
               onClick={handleNext}
-              className="animate-bounce"
+              className="animate-bounce disabled:animate-none disabled:hidden"
               disabled={!isCompleted}
             >
               <span>Next!</span>
