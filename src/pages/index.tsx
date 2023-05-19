@@ -15,6 +15,7 @@ import Confetti from "react-confetti";
 // BG:     green-100/50
 
 //TODO ICON?:https://icon-sets.iconify.design/ic/twotone-catching-pokemon/
+//TODO Every score up/down, point logo flows
 
 export interface GuessedState {
   guessed: boolean;
@@ -82,8 +83,7 @@ const Home = () => {
 
       const positions: number[] = checkKeyInName(e.key, name); //==>[2,4] Index of the pressed Key in the name
       displayCorrectKeys(positions); //==>(states.guessed → true) if it's correctly guessed
-      updateScore(positions); //==>Update score
-      // console.log(positions);
+      updateScore(positions); //==>Update score //it's impure function, useEffect needs to be executed [isCompleted]
 
       setBlink(true);
       setTimeout(() => setBlink(false), 200);
@@ -93,7 +93,7 @@ const Home = () => {
     return () => {
       window.removeEventListener("keydown", handleKeydown);
     };
-  }, [name]);
+  }, [name, isCompleted]); 
 
   //==>Index of the pressed Key in the name (ex)[2, 4]
   const checkKeyInName = (pressedKey: string, name: string) => {
@@ -123,7 +123,6 @@ const Home = () => {
   //==>Update score correct:+10 / wrong:-15
   const updateScore = (positions: number[]) => {
     console.log(isCompleted);
-    //TODO: How to disable to update score when "isCompleted"?
     //TODO: How to awards 20Pts when all letter is guessed?
     if (!isCompleted) {
       positions.length > 0
@@ -161,7 +160,7 @@ const Home = () => {
 
             <Button
               onClick={handleNext}
-              className="animate-bounce disabled:animate-none disabled:hidden"
+              className="animate-bounce disabled:hidden"
               disabled={!isCompleted}
             >
               <span>Next!</span>
@@ -188,3 +187,4 @@ const Home = () => {
 };
 
 export default Home;
+
