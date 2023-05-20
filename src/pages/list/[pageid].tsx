@@ -9,6 +9,7 @@ import {
   IoIosArrowDroprightCircle,
   IoIosArrowDropleftCircle,
 } from "react-icons/io";
+import Link from "next/link";
 
 export interface PokemonData {
   id: number;
@@ -82,35 +83,30 @@ const Page: NextPage<PageProps> = ({ data }) => {
             </button>
           </form>
           {/* CARD CONTAINER */}
-          <div className="max-w-xl md:max-w-full mx-auto mt-4 h-fit grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14 md:gap-10 lg:gap-8">
-            {/* CARD */}
-            {data.map((pokemon) => {
-              return (
-                <div
-                  key={pokemon.id}
-                  className=" h-fit bg-white rounded-lg shadow-lg"
-                >
-                  <div className="bg-slate-200 rounded-t-lg">
-                    <Image
-                      src={pokemon.imgUrl}
-                      alt={pokemon.name}
-                      width={500}
-                      height={500}
-                    />
-                  </div>
 
-                  <div className="p-1">
-                    <div>{`# ${("000" + pokemon.id).slice(-4)}`}</div>
-                    <div className="text-xl font-bold text-center uppercase">
-                      {pokemon.name}
+          <div className="max-w-xl md:max-w-[90%] mx-auto mt-4 h-fit grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14 md:gap-10 lg:gap-8">
+            {/* CARD */}
+            {data.map(({ id, imgUrl, name }) => {
+              return (
+                <Link key={id} href={`/detail/${id}`}>
+                  <div className=" h-fit bg-white rounded-lg shadow-lg hover:scale-105 transition">
+                    <div className="bg-slate-200 rounded-t-lg">
+                      <Image src={imgUrl} alt={name} width={500} height={500} />
                     </div>
-                    {/* {pokemon.types.map((type) => (
+
+                    <div className="p-1">
+                      <div>{`# ${("000" + id).slice(-4)}`}</div>
+                      <div className="text-xl font-bold text-center uppercase">
+                        {name}
+                      </div>
+                      {/* {pokemon.types.map((type) => (
                       <div key={type} className="flex">
                         <div>{type}</div>
                       </div>
                     ))} */}
+                    </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
