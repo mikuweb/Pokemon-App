@@ -15,7 +15,7 @@ export interface PokemonData {
   id: number;
   imgUrl: string;
   name: string;
-  // types: string[];
+  urlId: string;
 }
 
 interface PageProps {
@@ -86,9 +86,9 @@ const Page: NextPage<PageProps> = ({ data }) => {
 
           <div className="max-w-xl md:max-w-[90%] mx-auto mt-4 h-fit grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14 md:gap-10 lg:gap-8">
             {/* CARD */}
-            {data.map(({ id, imgUrl, name }) => {
+            {data.map(({ id, imgUrl, name, urlId }) => {
               return (
-                <Link key={id} href={`/detail/${id}`}>
+                <Link key={id} href={`/detail/${urlId}`}>
                   <div className=" h-fit bg-white rounded-lg shadow-lg hover:scale-105 transition">
                     <div className="bg-slate-200 rounded-t-lg">
                       <Image src={imgUrl} alt={name} width={500} height={500} />
@@ -99,11 +99,6 @@ const Page: NextPage<PageProps> = ({ data }) => {
                       <div className="text-xl font-bold text-center uppercase">
                         {name}
                       </div>
-                      {/* {pokemon.types.map((type) => (
-                      <div key={type} className="flex">
-                        <div>{type}</div>
-                      </div>
-                    ))} */}
                     </div>
                   </div>
                 </Link>
@@ -138,7 +133,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
 
 export default Page;
 
-//getStaticPaths
+//getStaticPaths: Need this to pre-render with getStaticProps
 export async function getStaticPaths() {
   const response = await fetch("https://pokeapi.co/api/v2/pokemon");
   const data = await response.json();
@@ -156,8 +151,8 @@ export async function getStaticPaths() {
 
 // Static Site Generation
 export async function getStaticProps(context: { params: any }) {
-  //const context = // [{ params: { pageId: '0' } },...{ params: { pageId: '64' } }]
-  const { params } = context; // == const params = context.params;
+  //const context = [{ params: { pageId: '0' } },...{ params: { pageId: '64' } }]
+  const { params } = context; // = const params = context.params;
   const response = await fetch(
     `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${
       parseInt(params.pageId) * 20
@@ -167,14 +162,22 @@ export async function getStaticProps(context: { params: any }) {
   const data = await response.json();
   const results = data.results; //[] 20 items
 
-  async function fetchAndPush(entry: { url: string }) {
+   async function fetchAndPush(entry: { url: string }) {
     const result = await fetch(entry.url); //fetch(...) returns Promise<someDataType> and await fetch(...) returns someDataType
+    // entry.url looks like this: "https://pokeapi.com/v2/.../10241"
+    // -> Write a function that takes this string, and extracts the last number(.split)
+    const extractIdFromString = (url: string) => {
+      const id = url.split("/");
+      return id[6];
+    };
+    // Then take that number and add it to the push down there
+    const urlId = extractIdFromString(entry.url);
     const pokemonData = await result.json();
     pokemonArr.push({
       id: pokemonData.id,
       imgUrl: pokemonData.sprites.other.home.front_default,
       name: pokemonData.name,
-      // types: pokemonData.types.map((type: { name: string }) => type.name),
+      urlId: urlId,
     });
   }
 
@@ -189,7 +192,7 @@ export async function getStaticProps(context: { params: any }) {
   // await fetchAndPush(results[2])
   // await fetchAndPush(results[...])
   // await fetchAndPush(results[19])
-  //TODO sort()
+
   return {
     props: {
       data: pokemonArr.sort((a, b) => {

@@ -1,6 +1,7 @@
+import React from "react";
 import Button from "@/components/Button";
 import { useRouter } from "next/router";
-import React from "react";
+import { IoIosArrowDropleftCircle } from "react-icons/io";
 
 const Detail = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const Detail = () => {
             </div>
             {/*Right Contents */}
             <div className="w-full py-10 md:w-1/2 flex flex-col items-center gap-4 mx-auto ">
-              <div className="bg-sky-300 w-3/4 rounded-lg py-5">
+              <div className="bg-sky-300/70 w-3/4 rounded-lg py-5">
                 <table className="table-auto w-2/3 mx-auto border-separate border-spacing-2">
                   <tbody className="text-start">
                     <tr>
@@ -42,18 +43,10 @@ const Detail = () => {
                   </tbody>
                 </table>
               </div>
-              {/* <div className="w-full flex justify-around">
-                  <span>Height</span>
-                  <span>40 cm</span>
-                </div>
-                <div className="flex justify-around">
-                  <span>Weight</span>
-                  <span>6 kg</span>
-                </div> */}
 
               <div className="flex flex-col justify-between">
                 <span className="font-semibold text-xl mb-2">Type</span>
-                <span className="bg-yellow-400 py-2 px-5 rounded-lg">
+                <span className="bg-yellow-400/70 py-2 px-5 rounded-lg">
                   Electric
                 </span>
               </div>
@@ -63,7 +56,10 @@ const Detail = () => {
             {/* TEST */}
           </div>
         </div>
-        <Button onClick={handleBack}>Back to Poké list</Button>
+        <Button onClick={handleBack}>
+          <IoIosArrowDropleftCircle />
+          <span>Back to Poké list</span>
+        </Button>
       </div>
     </>
   );
@@ -71,6 +67,26 @@ const Detail = () => {
 
 export default Detail;
 
-//getStaticProps: fetch poke with [id]
+//getServerSideProps: fetch poke with [id]
 //<Link />をlist pageに書いてつなげる
 //context params: [id]
+
+// getServerSideProps getStaticPropsとほぼ同じ書き方
+
+// **Don't need getStaticPaths Because of rate limiting issue.
+// export async function getStaticPaths() {
+//   const response = await fetch("https://pokeapi.co/api/v2/pokemon");
+//   const data = await response.json();
+//   const count = data.count; //1281
+//   const amountOfId = Array.from(Array(count).keys());
+//   const paths = amountOfId.map((entry) => ({
+//     params: {
+//       id: "" + entry,
+//     },
+//   }));
+
+//   return {
+//     paths,
+//     fallback: false,
+//   };
+// }
