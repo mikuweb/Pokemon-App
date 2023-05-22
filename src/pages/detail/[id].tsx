@@ -72,8 +72,21 @@ export default Detail;
 //context params: [id]
 
 // getServerSideProps getStaticPropsとほぼ同じ書き方
+export async function getServerSideProps(context) {
+  
+  const { id } = context.query; // = const id = context.query.id;
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  const data = await response.json();
+  console.log(data);
+  return {
+    props: {
+      data,
+    },
+  };
+}
 
 // **Don't need getStaticPaths Because of rate limiting issue.
+
 // export async function getStaticPaths() {
 //   const response = await fetch("https://pokeapi.co/api/v2/pokemon");
 //   const data = await response.json();
