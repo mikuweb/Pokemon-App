@@ -41,6 +41,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
       setPrevPageBtn(false);
     }
   };
+
   const handleNext = () => {
     if (parseInt(currentPage) < 64) {
       setPrevPageBtn(true);
@@ -53,15 +54,8 @@ const Page: NextPage<PageProps> = ({ data }) => {
     }
   };
 
-  // const num = data.id;
-  // const ret = ( '000' + num ).slice( -4 );
-
   return (
     <>
-      <div className="flex flex-col">
-        <div className="text-xl">Pokémon Page: {pageId}</div>
-      </div>
-
       <div className="bg-green-100/50 flex flex-col items-center min-h-screen">
         {/* CONTAINER */}
         <div className="overflow-hidden w-full md:w-9/12 md:max-w-screen-lg flex flex-col">
@@ -117,7 +111,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
               <IoIosArrowDropleftCircle />
               <span>Previous</span>
             </Button>
-
+            <div className="text-xl text-blue-600 font-semibold">{parseInt(pageId as string) + 1} / 64</div>
             <Button
               onClick={handleNext}
               className="disabled:bg-slate-300"

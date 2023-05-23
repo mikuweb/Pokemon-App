@@ -14,9 +14,6 @@ const Detail = ({ name, img, height, weight, types }) => {
 
   return (
     <>
-      <div className="flex flex-col">
-        <div className="text-xl">Detail Page: {id}</div>
-      </div>
       <div className="bg-green-100/50 flex flex-col items-center h-screen">
         {/* White Container */}
         <div className="mb-10 md:mt-14 bg-white overflow-hidden w-full md:w-9/12 md:max-w-screen-lg text-center items-center">
@@ -54,10 +51,10 @@ const Detail = ({ name, img, height, weight, types }) => {
               <div className="w-3/4 flex flex-col justify-between">
                 <span className="font-semibold text-xl mb-2">Type</span>
                 <div className="flex justify-center gap-10">
-                  {types.map((type) => (
+                  {types.map((type: { type: { name: string } }) => (
                     <span
                       key={type.type.name}
-                      className="bg-yellow-400 py-2 px-5 rounded-lg text-xl"
+                      className="border-2 border-cyan-400 py-1 px-5 rounded-lg text-xl font-semibold"
                     >
                       {type.type.name}
                     </span>
