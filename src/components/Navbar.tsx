@@ -1,13 +1,20 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { BiMenu, BiX } from "react-icons/bi";
 
 export default function Navbar() {
   const [openMenu, setOpenMenu] = useState(false);
+  const router = useRouter();
 
   const toggleMenu = () => {
     setOpenMenu((preClick) => !preClick);
     console.log(openMenu);
+  };
+
+  const handleLink = (link: string) => {
+    setOpenMenu(false);
+    router.push(link);
   };
 
   const menuClassName = openMenu ? "top-[44px]" : "top-[-100%]";
@@ -27,20 +34,20 @@ export default function Navbar() {
       >
         <ul className="flex flex-col md:flex-row md:items-center justify-end gap-8 md:gap-4">
           <li>
-            <Link
-              href="/"
-              className="text-white rounded-full py-1 px-2 hover:border-2 focus:border-2 focus:border-cyan-400"
+            <a
+              onClick={() => handleLink("/")}
+              className="text-white text-lg rounded-full py-1 px-2 hover:border-2 focus:border-2 focus:border-cyan-400 cursor-pointer"
             >
               Game
-            </Link>
+            </a>
           </li>
           <li>
-            <Link
-              href="/list/0"
-              className="text-white rounded-full py-1 px-2 hover:border-2 focus:border-2 focus:border-cyan-400"
+            <a
+              onClick={() => handleLink("/list/0")}
+              className="text-white text-lg rounded-full py-1 px-2 hover:border-2 focus:border-2 focus:border-cyan-400 cursor-pointer"
             >
               Pokémon list
-            </Link>
+            </a>
           </li>
         </ul>
       </div>
