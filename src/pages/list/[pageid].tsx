@@ -25,8 +25,8 @@ interface PageProps {
 const Page: NextPage<PageProps> = ({ data }) => {
   const [inputvalue, setInputValue] = useState("");
   const [currentPage, setcurrentPage] = useState("0");
-  const [nextPage, setNextPage] = useState(true);
-  const [prevPage, setPrevPage] = useState(false);
+  const [nextPageBtn, setNextPageBtn] = useState(true);
+  const [prevPageBtn, setPrevPageBtn] = useState(false);
 
   const router = useRouter();
   const pageId = router.query.pageId;
@@ -36,18 +36,20 @@ const Page: NextPage<PageProps> = ({ data }) => {
       const prevPage = parseInt(currentPage) - 1;
       setcurrentPage(prevPage.toString());
       router.push(`/list/${prevPage}`);
-    } else {
-      setPrevPage(false);
+    }
+    if (parseInt(currentPage) == 1) {
+      setPrevPageBtn(false);
     }
   };
   const handleNext = () => {
     if (parseInt(currentPage) < 64) {
-      setPrevPage(true);
+      setPrevPageBtn(true);
       const nextPage = parseInt(currentPage) + 1;
       setcurrentPage(nextPage.toString());
       router.push(`/list/${nextPage}`);
-    } else {
-      setNextPage(false);
+    }
+    if (parseInt(currentPage) == 63) {
+      setNextPageBtn(false);
     }
   };
 
@@ -106,11 +108,11 @@ const Page: NextPage<PageProps> = ({ data }) => {
             })}
           </div>
           {/* ARROW BUTTON */}
-          <div className="p-5 flex justify justify-between">
+          <div className="p-5 flex justify justify-between mb-5">
             <Button
               onClick={handlePrev}
               className="disabled:bg-slate-400 disabled:opacity-70"
-              disabled={!prevPage}
+              disabled={!prevPageBtn}
             >
               <IoIosArrowDropleftCircle />
               <span>Previous</span>
@@ -119,7 +121,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
             <Button
               onClick={handleNext}
               className="disabled:bg-slate-300"
-              disabled={!nextPage}
+              disabled={!nextPageBtn}
             >
               <span>Next</span>
               <IoIosArrowDroprightCircle />
