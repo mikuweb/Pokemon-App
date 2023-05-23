@@ -3,8 +3,23 @@ import Button from "@/components/Button";
 import { useRouter } from "next/router";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
 import Image from "next/image";
+import { NextPage } from "next";
 
-const Detail = ({ name, img, height, weight, types }) => {
+interface DetailProps {
+  name: string;
+  img: string;
+  height: string;
+  weight: string;
+  types: { type: { name: string } }[];
+}
+
+const Detail: NextPage<DetailProps> = ({
+  name,
+  img,
+  height,
+  weight,
+  types,
+}) => {
   const router = useRouter();
   const id = router.query.id;
 
@@ -83,7 +98,8 @@ export default Detail;
 //context params: [id]
 
 // getServerSideProps getStaticPropsとほぼ同じ書き方
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: { query: { id: string } }) {
+  console.log(typeof(context.query.id));
   const { id } = context.query; // = const id = context.query.id;
   const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
   const data = await response.json();
