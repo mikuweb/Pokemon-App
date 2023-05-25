@@ -93,7 +93,7 @@ const Home = () => {
     return () => {
       window.removeEventListener("keydown", handleKeydown);
     };
-  }, [name, isCompleted]); 
+  }, [name, isCompleted]);
 
   //==>Index of the pressed Key in the name (ex)[2, 4]
   const checkKeyInName = (pressedKey: string, name: string) => {
@@ -136,15 +136,15 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>Pokémon App</title>
+        <title>Pokémon App | Game</title>
       </Head>
-      <main className="bg-green-100/50 flex flex-col items-center min-h-screen">
+      <main className="bg-green-100/50 text-slate-700 flex flex-col items-center min-h-screen">
         {/* CONTAINER */}
         <div className="w-fit md:w-1/2 md:max-w-screen-sm flex flex-col items-center">
           {isCompleted && <Confetti />}
           <button
             onClick={toggleModal}
-            className=" w-fit text-sm px-3 py-1 mt-3 mb-1 md:my-4 bg-yellow-400 hover:bg-yellow-500 text-blue-600 rounded-full"
+            className=" w-fit text-base font-semibold px-3 py-1 mt-3 mb-3 md:my-4 bg-yellow-400 hover:bg-yellow-500 text-blue-600 rounded-full"
           >
             LEARN THE RULES
           </button>
@@ -187,4 +187,3 @@ const Home = () => {
 };
 
 export default Home;
-

@@ -10,6 +10,7 @@ import {
   IoIosArrowDropleftCircle,
 } from "react-icons/io";
 import Link from "next/link";
+import Head from "next/head";
 
 export interface PokemonData {
   id: number;
@@ -56,11 +57,15 @@ const Page: NextPage<PageProps> = ({ data }) => {
 
   return (
     <>
-      <div className="bg-green-100/50 flex flex-col items-center min-h-screen">
+      <Head>
+        <title>Pokémon App | Pokémon list</title>
+      </Head>
+      <div className="bg-green-100/50 text-slate-700 flex flex-col items-center min-h-screen">
         {/* CONTAINER */}
         <div className="overflow-hidden w-full md:w-9/12 md:max-w-screen-lg flex flex-col">
-          {/* INPUT FORM */}
-          <form className="my-4 pr-3 w-10/12 h-16 mx-auto flex gap-3 justify-center items-center bg-white rounded-xl">
+          <h1 className="my-4 font-bold text-3xl md:text-4xl">Pokémon List</h1>
+          {/* Search INPUT FORM */}
+          {/* <form className="my-4 pr-3 w-10/12 h-16 mx-auto flex gap-3 justify-center items-center bg-white rounded-xl">
             <label className="relative block">
               <span className="absolute inset-y-0 left-0 flex items-center pl-5">
                 <HiMagnifyingGlass size={20} color="#64748b" />
@@ -77,9 +82,9 @@ const Page: NextPage<PageProps> = ({ data }) => {
             <button className="h-12 px-3 bg-blue-950 rounded-xl text-white hover:opacity-70">
               Search
             </button>
-          </form>
-          {/* CARD CONTAINER */}
+          </form> */}
 
+          {/* CARD CONTAINER */}
           <div className="max-w-xl md:max-w-[90%] mx-auto mt-4 h-fit grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14 md:gap-10 lg:gap-8">
             {/* CARD */}
             {data.map(({ id, imgUrl, name, urlId }) => {
@@ -111,7 +116,9 @@ const Page: NextPage<PageProps> = ({ data }) => {
               <IoIosArrowDropleftCircle />
               <span>Previous</span>
             </Button>
-            <div className="text-xl text-blue-600 font-semibold">{parseInt(pageId as string) + 1} / 64</div>
+            <div className="text-xl text-blue-600 font-semibold">
+              {parseInt(pageId as string) + 1} / 64
+            </div>
             <Button
               onClick={handleNext}
               className="disabled:bg-slate-300"
@@ -158,7 +165,7 @@ export async function getStaticProps(context: { params: any }) {
   const data = await response.json();
   const results = data.results; //[] 20 items
 
-   async function fetchAndPush(entry: { url: string }) {
+  async function fetchAndPush(entry: { url: string }) {
     const result = await fetch(entry.url); //fetch(...) returns Promise<someDataType> and await fetch(...) returns someDataType
     // entry.url looks like this: "https://pokeapi.com/v2/.../10241"
     // -> Write a function that takes this string, and extracts the last number(.split)
