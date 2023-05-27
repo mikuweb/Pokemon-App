@@ -28,12 +28,11 @@ const Home = () => {
   const [score, setScore] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [blink, setBlink] = useState(false);
-
-  // CHECK IF ALL LETTER OF THE NAME IS GUESSED
-  const isCompleted = states.every((state) => state.guessed);
+  const [isGameCompleted, setIsGameCompleted] = useState(false);
 
   //HANDLE CLICK BUTTON TO DISPLAY NEXT POKEMON
   const handleNext = () => {
+    setIsGameCompleted(false);
     fetchPokemon();
   };
 
@@ -83,7 +82,13 @@ const Home = () => {
 
       const positions: number[] = checkKeyInName(e.key, name); //==>[2,4] Index of the pressed Key in the name
       displayCorrectKeys(positions); //==>(states.guessed → true) if it's correctly guessed
-      updateScore(positions); //==>Update score //it's impure function, useEffect needs to be executed [isCompleted]
+      updateScore(positions); //==>Update score //it's impure function, useEffect needs to be executed [isGameCompleted]
+
+      // ↓Check if all letters are guessed correctly
+      if (!isGameCompleted && states.every((state) => state.guessed)) {
+        setIsGameCompleted(true);
+        setScore((preScore) => preScore + 20); // Award 20 Pts for solving
+      }
 
       setBlink(true);
       setTimeout(() => setBlink(false), 200);
@@ -93,7 +98,7 @@ const Home = () => {
     return () => {
       window.removeEventListener("keydown", handleKeydown);
     };
-  }, [name, isCompleted]);
+  }, [name, isGameCompleted]);
 
   //==>Index of the pressed Key in the name (ex)[2, 4]
   const checkKeyInName = (pressedKey: string, name: string) => {
@@ -122,14 +127,13 @@ const Home = () => {
 
   //==>Update score correct:+10 / wrong:-15
   const updateScore = (positions: number[]) => {
-    console.log(isCompleted);
-    //TODO: How to awards 20Pts when all letter is guessed?
-    if (!isCompleted) {
+    console.log(isGameCompleted);
+    if (isGameCompleted) {
+      return;
+    } else {
       positions.length > 0
         ? setScore((preScore) => preScore + 10)
         : setScore((preScore) => preScore - 15);
-    } else {
-      return;
     }
   };
 
@@ -141,7 +145,7 @@ const Home = () => {
       <main className="bg-green-100/50 text-slate-700 flex flex-col items-center min-h-screen">
         {/* CONTAINER */}
         <div className="w-fit md:w-1/2 md:max-w-screen-sm flex flex-col items-center">
-          {isCompleted && <Confetti />}
+          {isGameCompleted && <Confetti />}
           <button
             onClick={toggleModal}
             className=" w-fit text-base font-semibold px-3 py-1 mt-3 mb-3 md:my-4 bg-yellow-400 hover:bg-yellow-500 text-blue-600 rounded-full"
@@ -161,7 +165,7 @@ const Home = () => {
             <Button
               onClick={handleNext}
               className="animate-bounce disabled:hidden"
-              disabled={!isCompleted}
+              disabled={!isGameCompleted}
             >
               <span>Next!</span>
               <IoIosArrowDroprightCircle size={25} />
