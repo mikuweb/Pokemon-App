@@ -6,6 +6,7 @@ import Head from "next/head";
 import RuleModal from "@/components/RuleModal";
 import Button from "@/components/Button";
 import Confetti from "react-confetti";
+import FloatingText from "@/components/FloatingText/FloatingText";
 
 // --- Color Pallet ---
 // Navber: blue-900
@@ -14,8 +15,8 @@ import Confetti from "react-confetti";
 // Score:  cyan-400
 // BG:     green-100/50
 
-//TODO ICON?:https://icon-sets.iconify.design/ic/twotone-catching-pokemon/
 //TODO Every score up/down, point logo flows
+// TODO:git init? .git?
 
 export interface GuessedState {
   guessed: boolean;
@@ -48,7 +49,6 @@ const Home = () => {
       const url = `https://pokeapi.co/api/v2/pokemon/${randomId}`;
       const res = await fetch(url);
       const data = await res.json();
-      console.log(data);
       const pokeName = data.name;
       const pokeImg = data.sprites.other.home.front_default;
       setName(pokeName);
@@ -78,8 +78,6 @@ const Home = () => {
   // WHEN A KEY IS PRESSED
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
-      console.log(e.key);
-
       const positions: number[] = checkKeyInName(e.key, name); //==>[2,4] Index of the pressed Key in the name
       displayCorrectKeys(positions); //==>(states.guessed → true) if it's correctly guessed
       updateScore(positions); //==>Update score //it's impure function, useEffect needs to be executed [isGameCompleted]
@@ -104,7 +102,6 @@ const Home = () => {
   const checkKeyInName = (pressedKey: string, name: string) => {
     const positionsArr = [];
     let position: number = name.indexOf(pressedKey); //==>Check index of the pressed key in the name (Not: -1)
-    // console.log(pressedKey, name);
     while (position !== -1) {
       positionsArr.push(position);
       position = name.indexOf(pressedKey, position + 1); //==>indexOf(searchElement, fromIndex):at which to start searching
@@ -123,11 +120,9 @@ const Home = () => {
     }
     setStates(copyOfStates);
   };
-  // console.log(states);
 
   //==>Update score correct:+10 / wrong:-15
   const updateScore = (positions: number[]) => {
-    console.log(isGameCompleted);
     if (isGameCompleted) {
       return;
     } else {
@@ -172,7 +167,7 @@ const Home = () => {
             </Button>
           </div>
           {/* POKEMON */}
-          <div className="w-64 md:w-80 mb-3 flex items-center justify-center">
+          <div className="relative border-2 w-64 md:w-80 mb-3 flex items-center justify-center">
             {img.length > 0 && (
               <Image
                 priority={true}
@@ -182,7 +177,11 @@ const Home = () => {
                 height={300}
               />
             )}
+            <div className="absolute text-5xl font-bold text-cyan-400 pointer-events-none select-none p-8 right-0 top-0">
+              <FloatingText score={score}>point</FloatingText>
+            </div>
           </div>
+
           <Input states={states} blink={blink} />
         </div>
       </main>
