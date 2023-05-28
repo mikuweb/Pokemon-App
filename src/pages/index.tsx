@@ -167,7 +167,7 @@ const Home = () => {
             </Button>
           </div>
           {/* POKEMON */}
-          <div className="relative border-2 w-64 md:w-80 mb-3 flex items-center justify-center">
+          <div className="relative w-64 md:w-80 mb-3 flex items-center justify-center">
             {img.length > 0 && (
               <Image
                 priority={true}
@@ -177,9 +177,11 @@ const Home = () => {
                 height={300}
               />
             )}
-            <div className="absolute text-5xl font-bold text-cyan-400 pointer-events-none select-none p-8 right-0 top-0">
-              <FloatingText score={score}>point</FloatingText>
-            </div>
+            {score > 0 && (
+              <div className="absolute text-5xl font-bold text-cyan-400 pointer-events-none select-none p-8 right-0 top-0">
+                <FloatingText score={score}>point</FloatingText>
+              </div>
+            )}
           </div>
 
           <Input states={states} blink={blink} />
