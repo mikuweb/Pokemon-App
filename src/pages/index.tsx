@@ -27,6 +27,8 @@ const Home = () => {
   const [img, setImg] = useState("");
   const [states, setStates] = useState<GuessedState[]>([]);
   const [score, setScore] = useState(0);
+  const [floatingText, setFloatingText] = useState("");
+  const [floatingTextKey, setFloatingTextKey] = useState("initial");
   const [isOpen, setIsOpen] = useState(false);
   const [blink, setBlink] = useState(false);
   const [isGameCompleted, setIsGameCompleted] = useState(false);
@@ -86,6 +88,8 @@ const Home = () => {
       if (!isGameCompleted && states.every((state) => state.guessed)) {
         setIsGameCompleted(true);
         setScore((preScore) => preScore + 20); // Award 20 Pts for solving
+        setFloatingTextKey(crypto.randomUUID());
+        setFloatingText("+20");
       }
 
       setBlink(true);
@@ -127,8 +131,12 @@ const Home = () => {
       return;
     } else {
       positions.length > 0
-        ? setScore((preScore) => preScore + 10)
-        : setScore((preScore) => preScore - 15);
+        ? (setScore((preScore) => preScore + 10),
+          setFloatingTextKey(crypto.randomUUID()),
+          setFloatingText("+10"))
+        : (setScore((preScore) => preScore - 15),
+          setFloatingTextKey(crypto.randomUUID()),
+          setFloatingText("-15"));
     }
   };
 
@@ -177,9 +185,17 @@ const Home = () => {
                 height={300}
               />
             )}
-            {score > 0 && (
-              <div className="absolute text-5xl font-bold text-cyan-400 pointer-events-none select-none p-8 right-0 top-0">
-                <FloatingText score={score}>point</FloatingText>
+            {floatingTextKey !== "initial" && (
+              <div
+                className={`${
+                  floatingText === "-15"
+                    ? "text-red-500 left-0"
+                    : "text-cyan-400 right-0"
+                } absolute text-5xl font-bold  pointer-events-none select-none p-8 top-0`}
+              >
+                <FloatingText key={floatingTextKey}>
+                  {floatingText}
+                </FloatingText>
               </div>
             )}
           </div>
