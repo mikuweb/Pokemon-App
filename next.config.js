@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-// TODO:DELETE 'bulbapedia.bulbagarden.net'
 
 module.exports = {
   reactStrictMode: false,

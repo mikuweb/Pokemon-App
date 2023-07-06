@@ -97,10 +97,9 @@ const RuleModal: React.FC<RuleModalProps> = ({ toggleModal }) => {
                 <li className="pb-2">
                   <p>Every correct guess awards 10 Pts</p>
                 </li>
-                {/* TODO:Solving award 20 Pts  */}
-                {/* <li className="pb-2">
+                <li className="pb-2">
                   <p>Solving award 20 Pts</p>
-                </li> */}
+                </li>
                 <li className="pb-2">
                   <p>Every mistake deducts 15 Pts</p>
                 </li>

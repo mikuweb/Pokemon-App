@@ -81,9 +81,6 @@ const Detail: NextPage<DetailProps> = ({
                 </div>
               </div>
             </div>
-            {/* TEST */}
-
-            {/* TEST */}
           </div>
         </div>
         <Button onClick={handleBack}>
@@ -97,13 +94,8 @@ const Detail: NextPage<DetailProps> = ({
 
 export default Detail;
 
-//getServerSideProps: fetch poke with [id]
-//<Link />をlist pageに書いてつなげる
-//context params: [id]
-
 // getServerSideProps getStaticPropsとほぼ同じ書き方
 export async function getServerSideProps(context: { query: { id: string } }) {
-  console.log(typeof(context.query.id));
   const { id } = context.query; // = const id = context.query.id;
   const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
   const data = await response.json();

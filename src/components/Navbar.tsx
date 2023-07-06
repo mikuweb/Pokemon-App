@@ -9,7 +9,6 @@ export default function Navbar() {
 
   const toggleMenu = () => {
     setOpenMenu((preClick) => !preClick);
-    console.log(openMenu);
   };
 
   const handleLink = (link: string) => {
