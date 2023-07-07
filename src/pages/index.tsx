@@ -15,9 +15,6 @@ import FloatingText from "@/components/FloatingText/FloatingText";
 // Score:  cyan-400
 // BG:     green-100/50
 
-//TODO Every score up/down, point logo flows
-// TODO:git init? .git?
-
 export interface GuessedState {
   guessed: boolean;
   key: string;

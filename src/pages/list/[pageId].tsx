@@ -14,9 +14,9 @@ import pokemonDetail from "../../../pokemonDetail.json";
 
 export interface PokemonData {
   id: number;
-  imgUrl: string;
+  img: string | null;
   name: string;
-  urlId: string;
+  index: number;
 }
 
 interface PageProps {
@@ -86,12 +86,16 @@ const Page: NextPage<PageProps> = ({ data }) => {
           {/* CARD CONTAINER */}
           <div className="max-w-xl md:max-w-[90%] mx-auto mt-4 h-fit grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14 md:gap-10 lg:gap-8">
             {/* CARD */}
-            {data.map(({ id, imgUrl, name, urlId }) => {
+            {data.map(({ id, img, name, index }) => {
               return (
-                <Link key={id} href={`/detail/${urlId}`}>
+                <Link key={id} href={`/detail/${index}`}>
                   <div className=" h-fit bg-white rounded-lg shadow-lg hover:scale-105 transition">
                     <div className="bg-slate-200 rounded-t-lg">
-                      <Image src={imgUrl} alt={name} width={500} height={500} />
+                      {img ? (
+                        <Image src={img} alt={name} width={500} height={500} />
+                      ) : (
+                        "No Image"
+                      )}
                     </div>
 
                     <div className="p-1">
@@ -138,7 +142,7 @@ export default Page;
 //getStaticPaths: Need this to pre-render with getStaticProps
 export const getStaticPaths = async () => {
   const count = 50; //Each page has 50 Pokemon
-  const amountPages = Math.ceil(count / pokemonList.length); // 26 pages (50 / 1281 = 25.62)
+  const amountPages = Math.ceil(pokemonList.length / count); // 26 pages (50 / 1281 = 25.62)
   const pages = Array.from(Array(amountPages).keys()); // [0, 1, 2,....25]
   const paths = pages.map((p) => ({
     params: { pageId: "" + p }, // [{ params: { pageId: '0' } },...{ params: { pageId: '25' } }]
@@ -155,11 +159,17 @@ export const getStaticProps: GetStaticProps<PageProps> = async (context: {
 }) => {
   const { params } = context; // = const params = context.params;
   const offset = parseInt(params?.pageId ?? "0");
-  const pokemonArr = (pokemonDetail as unknown as PokemonData[]).slice(
-    offset * 50,
-    (offset + 1) * 50
-  );
-
+  const pokemonArr = pokemonDetail
+    .slice(
+      offset * 50, // 0  //  50 // 100
+      (offset + 1) * 50 // 50 // 100 // 150
+    )
+    .map((pokemon, idx) => ({
+      name: pokemon.name,
+      id: pokemon.id,
+      img: pokemon.img,
+      index: offset * 50 + idx, // the position of that specific pokemon in pokemonDetail between 0 and 1280
+    }));
   return {
     props: {
       data: pokemonArr,

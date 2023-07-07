@@ -26,15 +26,24 @@ const extractIdFromUrl = (url) => {
 
 async function main() {
   const count = await getPokemonCount(); //*1281 Gives us the number of Pokemon
-  const pokeDataRawJson = fs.readFileSync('./pokemon.json');
-  const pokeData = JSON.parse(pokeDataRawJson)
+  const pokeDataRawJson = fs.readFileSync("./pokemon.json");
+  const pokeData = JSON.parse(pokeDataRawJson);
   const pokemon = [];
   const ids = pokeData.map((entry) => extractIdFromUrl(entry.url));
-  for (let i = 1; i < count; i++) {
+  for (let i = 0; i < count; i++) {
     console.log("Fetching Pokemon ", i);
     // console.log("Pokemon has id" , ids[i])
-    const results = await fetchPokeDetail(ids[i]);
-    pokemon.push(results);
+    const result = await fetchPokeDetail(ids[i]);
+    const relevantData = {
+      name: result.name,
+      img:
+        result.sprites.other.home.front_default ?? result.sprites.front_default,
+      height: result.height,
+      weight: result.weight,
+      types: result.types,
+      id: result.id,
+    };
+    pokemon.push(relevantData);
   }
   // save that to a file to pokemon.json
   console.log("Saving all the pokemon");
@@ -50,4 +59,3 @@ await main();
 /*
 {"count":1281,"next":"https://pokeapi.co/api/v2/pokemon?offset=20&limit=20","previous":null,"results":[{"name":"bulbasaur","url":"https://pokeapi.co/api/v2/pokemon/1/"},{"name":"ivysaur","url":"https://pokeapi.co/api/v2/pokemon/2/"},{"name":"venusaur","url":"https://pokeapi.co/api/v2/pokemon/3/"},{"name":"charmander","url":"https://pokeapi.co/api/v2/pokemon/4/"},{"name":"charmeleon","url":"https://pokeapi.co/api/v2/pokemon/5/"},{"name":"charizard","url":"https://pokeapi.co/api/v2/pokemon/6/"},{"name":"squirtle","url":"https://pokeapi.co/api/v2/pokemon/7/"},{"name":"wartortle","url":"https://pokeapi.co/api/v2/pokemon/8/"},{"name":"blastoise","url":"https://pokeapi.co/api/v2/pokemon/9/"},{"name":"caterpie","url":"https://pokeapi.co/api/v2/pokemon/10/"},{"name":"metapod","url":"https://pokeapi.co/api/v2/pokemon/11/"},{"name":"butterfree","url":"https://pokeapi.co/api/v2/pokemon/12/"},{"name":"weedle","url":"https://pokeapi.co/api/v2/pokemon/13/"},{"name":"kakuna","url":"https://pokeapi.co/api/v2/pokemon/14/"},{"name":"beedrill","url":"https://pokeapi.co/api/v2/pokemon/15/"},{"name":"pidgey","url":"https://pokeapi.co/api/v2/pokemon/16/"},{"name":"pidgeotto","url":"https://pokeapi.co/api/v2/pokemon/17/"},{"name":"pidgeot","url":"https://pokeapi.co/api/v2/pokemon/18/"},{"name":"rattata","url":"https://pokeapi.co/api/v2/pokemon/19/"},{"name":"raticate","url":"https://pokeapi.co/api/v2/pokemon/20/"}]}
 */
-
