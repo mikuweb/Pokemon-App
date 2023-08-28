@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -12,6 +12,7 @@ import Link from "next/link";
 import Head from "next/head";
 import pokemonList from "../../../pokemon.json";
 import pokemonDetail from "../../../pokemonDetail.json";
+import useDebounce from "@/hooks/useDebounce";
 
 export interface PokemonData {
   id: number;
@@ -29,6 +30,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
   const [nextPageBtn, setNextPageBtn] = useState(true);
   const [prevPageBtn, setPrevPageBtn] = useState(false);
 
+  const [inputValue, setInputValue] = useState("");
   const [filteredList, setFilteredList] = useState(data);
 
   const router = useRouter();
@@ -57,16 +59,24 @@ const Page: NextPage<PageProps> = ({ data }) => {
     }
   };
 
-  const filterBySearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
+  const filterBySearch = () => {
     let updatedList = [...data];
     updatedList = updatedList.filter(
       (pokemon) =>
-        pokemon.name.toLocaleLowerCase().indexOf(query.toLocaleLowerCase()) !==
-        -1
+        pokemon.name
+          .toLocaleLowerCase()
+          .indexOf(inputValue.toLocaleLowerCase()) !== -1
     );
     setFilteredList(updatedList);
   };
+
+  const debounceHandleSearch = useDebounce({
+    callback: filterBySearch,
+  });
+
+  useEffect(() => {
+    debounceHandleSearch();
+  }, [inputValue]);
 
   return (
     <>
@@ -87,7 +97,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
             <input
               className="h-12 pl-10 w-full rounded-xl bg-slate-200 px-3 focus:outline-blue-900 focus:outline-8"
               placeholder="Search Pokémon name..."
-              onChange={filterBySearch}
+              onChange={(e) => setInputValue(e.target.value)}
             />
             {/* <button className="h-12 px-3 bg-blue-950 rounded-xl text-white hover:opacity-70">
               Search
