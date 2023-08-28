@@ -3,10 +3,10 @@ import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Head from "next/head";
-import RuleModal from "@/components/RuleModal";
 import Button from "@/components/Button";
 import Confetti from "react-confetti";
 import FloatingText from "@/components/FloatingText/FloatingText";
+import Rule from "@/features/Rule";
 
 // --- Color Pallet ---
 // Navber: blue-900
@@ -26,7 +26,6 @@ const Home = () => {
   const [score, setScore] = useState(0);
   const [floatingText, setFloatingText] = useState("");
   const [floatingTextKey, setFloatingTextKey] = useState("initial");
-  const [isOpen, setIsOpen] = useState(false);
   const [blink, setBlink] = useState(false);
   const [isGameCompleted, setIsGameCompleted] = useState(false);
 
@@ -35,18 +34,6 @@ const Home = () => {
     setIsGameCompleted(false);
     fetchPokemon();
   };
-
-  // OPEN | CLOSE RULE-MODAL
-  const toggleModal = () => {
-    setIsOpen((preClick) => !preClick);
-  };
-
-  // OPEN RULE-MODAL USER'S FIRST VISIT
-  useEffect(() => {
-    setTimeout(() => {
-      toggleModal();
-    }, 2000);
-  }, []);
 
   // INITIAL STATE
   const fetchPokemon = async () => {
@@ -153,13 +140,7 @@ const Home = () => {
         {/* CONTAINER */}
         <div className="w-fit md:w-1/2 md:max-w-screen-sm flex flex-col items-center">
           {isGameCompleted && <Confetti />}
-          <button
-            onClick={toggleModal}
-            className=" w-fit text-base font-semibold px-3 py-1 mt-3 mb-3 md:my-4 bg-yellow-400 hover:bg-yellow-500 text-blue-600 rounded-full"
-          >
-            LEARN THE RULES
-          </button>
-          {isOpen && <RuleModal toggleModal={toggleModal} />}
+          <Rule />
           <h1 className="font-bold text-3xl md:text-4xl">Guess the Pokémon!</h1>
           {/* SCORE & NEXT BTN */}
           <div className="mt-5 flex flex-col md:flex-row items-center gap-4 md:gap-13">
