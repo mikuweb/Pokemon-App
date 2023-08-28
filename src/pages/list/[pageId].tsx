@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -7,10 +7,12 @@ import {
   IoIosArrowDroprightCircle,
   IoIosArrowDropleftCircle,
 } from "react-icons/io";
+import { HiMagnifyingGlass } from "react-icons/hi2";
 import Link from "next/link";
 import Head from "next/head";
 import pokemonList from "../../../pokemon.json";
 import pokemonDetail from "../../../pokemonDetail.json";
+import useDebounce from "@/hooks/useDebounce";
 
 export interface PokemonData {
   id: number;
@@ -27,6 +29,9 @@ const Page: NextPage<PageProps> = ({ data }) => {
   const [currentPage, setcurrentPage] = useState("0");
   const [nextPageBtn, setNextPageBtn] = useState(true);
   const [prevPageBtn, setPrevPageBtn] = useState(false);
+
+  const [inputValue, setInputValue] = useState("");
+  const [filteredList, setFilteredList] = useState(data);
 
   const router = useRouter();
   const pageId = router.query.pageId;
@@ -54,6 +59,25 @@ const Page: NextPage<PageProps> = ({ data }) => {
     }
   };
 
+  const filterBySearch = () => {
+    let updatedList = [...data];
+    updatedList = updatedList.filter(
+      (pokemon) =>
+        pokemon.name
+          .toLocaleLowerCase()
+          .indexOf(inputValue.toLocaleLowerCase()) !== -1
+    );
+    setFilteredList(updatedList);
+  };
+
+  const debounceHandleSearch = useDebounce({
+    callback: filterBySearch,
+  });
+
+  useEffect(() => {
+    debounceHandleSearch();
+  }, [inputValue]);
+
   return (
     <>
       <Head>
@@ -64,7 +88,7 @@ const Page: NextPage<PageProps> = ({ data }) => {
         <div className="overflow-hidden w-full md:w-9/12 md:max-w-screen-lg flex flex-col">
           <h1 className="my-4 font-bold text-3xl md:text-4xl">Pokémon List</h1>
           {/* Search INPUT FORM */}
-          {/* <form className="my-4 pr-3 w-10/12 h-16 mx-auto flex gap-3 justify-center items-center bg-white rounded-xl">
+          <form className="my-4 pr-3 w-10/12 h-16 mx-auto flex gap-3 justify-center items-center bg-white rounded-xl">
             <label className="relative block">
               <span className="absolute inset-y-0 left-0 flex items-center pl-5">
                 <HiMagnifyingGlass size={20} color="#64748b" />
@@ -72,21 +96,18 @@ const Page: NextPage<PageProps> = ({ data }) => {
             </label>
             <input
               className="h-12 pl-10 w-full rounded-xl bg-slate-200 px-3 focus:outline-blue-900 focus:outline-8"
-              placeholder="Pokémon name or keywords..."
-              value={inputvalue}
-              onChange={(e) => {
-                setInputValue(e.target.value);
-              }}
+              placeholder="Search Pokémon name..."
+              onChange={(e) => setInputValue(e.target.value)}
             />
-            <button className="h-12 px-3 bg-blue-950 rounded-xl text-white hover:opacity-70">
+            {/* <button className="h-12 px-3 bg-blue-950 rounded-xl text-white hover:opacity-70">
               Search
-            </button>
-          </form> */}
+            </button> */}
+          </form>
 
           {/* CARD CONTAINER */}
           <div className="max-w-xl md:max-w-[90%] mx-auto mt-4 h-fit grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-14 md:gap-10 lg:gap-8">
             {/* CARD */}
-            {data.map(({ id, img, name, index }) => {
+            {filteredList.map(({ id, img, name, index }) => {
               return (
                 <Link key={id} href={`/detail/${index}`}>
                   <div className=" h-fit bg-white rounded-lg shadow-lg hover:scale-105 transition">
