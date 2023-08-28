@@ -41,6 +41,13 @@ const Home = () => {
     setIsOpen((preClick) => !preClick);
   };
 
+  // OPEN RULE-MODAL USER'S FIRST VISIT
+  useEffect(() => {
+    setTimeout(() => {
+      toggleModal();
+    }, 2000);
+  }, []);
+
   // INITIAL STATE
   const fetchPokemon = async () => {
     try {
