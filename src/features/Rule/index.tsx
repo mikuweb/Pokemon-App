@@ -5,7 +5,7 @@ import { AiOutlineClose } from "react-icons/ai";
 const Rule = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // OPEN RULE-MODAL USER'S FIRST VISIT
+  // OPEN RULE-MODAL: USER'S FIRST VISIT
   useEffect(() => {
     setTimeout(() => {
       setIsOpen(true);
