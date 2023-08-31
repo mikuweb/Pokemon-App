@@ -9,7 +9,7 @@ const Rule = () => {
   useEffect(() => {
     setTimeout(() => {
       setIsOpen(true);
-    }, 2000);
+    }, 1000);
   }, []);
 
   return (
@@ -67,22 +67,24 @@ const Rule = () => {
                       <AiOutlineClose size={25} />
                     </button>
                   </div>
-                  <div className="mt-4 text-white relative pb-10 flex justify-center">
-                    <ul className="list-disc text-2xl">
+                  <div className="mt-4 text-white relative flex justify-center">
+                    <ul className="list-disc text-2xl text-left">
                       <li className="pb-2">
-                        <p>You guess the Pokémon name</p>
+                        <p className="pl-2">You guess the Pokémon name</p>
                       </li>
                       <li className="pb-2">
-                        <p>Every correct guess awards 10 Pts</p>
+                        <p className="pl-2">
+                          Every correct guess awards 10 Pts
+                        </p>
                       </li>
                       <li className="pb-2">
-                        <p>Solving award 20 Pts</p>
+                        <p className="pl-2">Solving award 20 Pts</p>
                       </li>
                       <li className="pb-2">
-                        <p>Every mistake deducts 15 Pts</p>
+                        <p className="pl-2">Every mistake deducts 15 Pts</p>
                       </li>
                       <li>
-                        <p>Have fun playing!</p>
+                        <p className="pl-2">Have fun playing!</p>
                       </li>
                     </ul>
                   </div>
