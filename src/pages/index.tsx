@@ -29,6 +29,13 @@ const Home = () => {
   const [blink, setBlink] = useState(false);
   const [isGameCompleted, setIsGameCompleted] = useState(false);
 
+  useEffect(() => {
+    const hasPlayed = localStorage.getItem("hasPlayed");
+    if (!hasPlayed) {
+      localStorage.setItem("hasPlayed", "true");
+    }
+  }, []);
+
   //HANDLE CLICK BUTTON TO DISPLAY NEXT POKEMON
   const handleNext = () => {
     setIsGameCompleted(false);

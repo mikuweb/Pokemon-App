@@ -7,9 +7,14 @@ const Rule = () => {
 
   // OPEN RULE-MODAL: USER'S FIRST VISIT
   useEffect(() => {
-    setTimeout(() => {
-      setIsOpen(true);
-    }, 1000);
+    const hasPlayed = localStorage.getItem("hasPlayed");
+
+    if (!hasPlayed) {
+      setTimeout(() => {
+        setIsOpen(true);
+        localStorage.setItem("hasPlayed", "true");
+      }, 1000);
+    }
   }, []);
 
   return (
