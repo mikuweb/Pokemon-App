@@ -12,7 +12,6 @@ const Rule = () => {
     if (!hasPlayed) {
       setTimeout(() => {
         setIsOpen(true);
-        localStorage.setItem("hasPlayed", "true");
       }, 1000);
     }
   }, []);
