@@ -1,10 +1,25 @@
 import React from "react";
 import { AiOutlineClose } from "react-icons/ai";
+import { GrLanguage } from "react-icons/gr";
 
 interface RuleModalProps {
   toggleModal: () => void;
 }
 const RuleModal: React.FC<RuleModalProps> = ({ toggleModal }) => {
+  {
+    /* TODO: inplement selecting language functionality */
+  }
+  const languages = [
+    {
+      value: "EN",
+      lable: "English",
+    },
+    {
+      value: "JP",
+      lable: "日本語",
+    },
+  ];
+
   return (
     <>
       <div
@@ -61,9 +76,32 @@ const RuleModal: React.FC<RuleModalProps> = ({ toggleModal }) => {
             rounded-t
             "
             >
-              <h3 className="text-3xl font-bold text-yellow-400">
-                Rule of the game
-              </h3>
+              <h3 className="text-3xl font-bold text-yellow-400">Game rule</h3>
+              {/* TODO: inplement selecting language functionality */}
+              <select
+                id="countries"
+                className="
+                border
+              border-gray-300 
+              text-gray-900 
+              text-sm 
+              rounded-lg 
+              focus:ring-blue-500 
+              focus:border-blue-500 
+              block 
+              w-fit
+              p-2.5 
+              mx-auto
+              "
+              >
+                <label>
+                  <GrLanguage size={25} />
+                </label>
+                <option selected>Choose a language</option>
+                {languages.map((language, i) => (
+                  <option value={language.value}>{language.lable}</option>
+                ))}
+              </select>
               <button
                 onClick={toggleModal}
                 className="
